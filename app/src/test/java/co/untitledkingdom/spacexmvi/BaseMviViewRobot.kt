@@ -10,15 +10,18 @@ abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, 
     abstract val renderedStates: ArrayList<in S>
     abstract val mainView: V
 
+    /** compares expected states with rendered */
     internal fun assertViewStates(vararg expectedStates: S) {
         Assert.assertEquals(expectedStates.toList(), renderedStates)
     }
 
+    /** simulates onStart */
     internal fun startView() {
         viewModel.attachView(mainView)
         viewModel.bind()
     }
 
+    /** simulates onStop */
     internal fun stopView() {
         viewModel.unbind()
     }
