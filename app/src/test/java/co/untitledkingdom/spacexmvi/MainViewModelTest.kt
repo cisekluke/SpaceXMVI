@@ -63,26 +63,37 @@ class MainViewModgelTest {
 
     @Test
     fun `fetch rockets list and clear after that`() {
+
+        /** mock necessary classes */
         val fetchedRocketList = listOf(Rocket("testRocketName", "url/to/pic"))
         whenever(mainInteractor.fetchRocketList()).thenReturn(
                 Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
         )
 
+        /** initialize view model */
         val mainViewModel = MainViewModel(mainInteractor)
+
+        /** initialize view robot using view model just created */
         val mainViewRobot = MainViewRobot(mainViewModel)
 
+        /** attach the view and run bind() method */
         mainViewRobot.startView()
+
+        /** classic action emitters */
         mainViewRobot.emitButtonClick()
         mainViewRobot.clearButtonClick()
+
+        /** simulate lifecycle change to check if state will be restored correctly */
         mainViewRobot.stopView()
         mainViewRobot.startView()
 
+        /** check if view states has been rendered properly */
         mainViewRobot.assertViewStates(
                 MainViewState(),
                 MainViewState(progress = true),
                 MainViewState(rocketList = fetchedRocketList),
                 MainViewState(),
-                MainViewState()
+                MainViewState() /** check the same state for the second time due to lifecycle changes */
         )
     }
 }
