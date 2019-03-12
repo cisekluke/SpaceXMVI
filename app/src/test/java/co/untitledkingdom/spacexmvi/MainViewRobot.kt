@@ -2,15 +2,13 @@ package co.untitledkingdom.spacexmvi
 
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import junit.framework.Assert.assertEquals
 
-class MainViewRobot(mainViewModel: MainViewModel) : BaseMviViewRobot<MainView, MainViewState, MainViewModel>() {
+class MainViewRobot(mainViewModel: MainViewModel) : BaseMviViewRobot<MainView, MainViewModel, MainViewState>(mainViewModel) {
 
     private val buttonClickSubject = PublishSubject.create<Boolean>()
     private val clearClickSubject = PublishSubject.create<Boolean>()
 
     override val renderedStates = arrayListOf<MainViewState>()
-    override val viewModel = mainViewModel
     override val mainView = object : MainView {
         override fun emitClearButton(): Observable<Boolean> = clearClickSubject
 

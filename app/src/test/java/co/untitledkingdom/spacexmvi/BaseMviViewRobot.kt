@@ -5,10 +5,9 @@ import co.untitledkingdom.spacexmvi.base.BaseMviViewState
 import co.untitledkingdom.spacexmvi.base.BaseViewModel
 import junit.framework.Assert
 
-abstract class BaseMviViewRobot<V : BaseMviView<*>, S : BaseMviViewState, M : BaseViewModel<*, V, *>> {
+abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, *>, S : BaseMviViewState>(private val viewModel: M) {
 
-    abstract val renderedStates: ArrayList<S>
-    abstract val viewModel: M
+    abstract val renderedStates: ArrayList<in S>
     abstract val mainView: V
 
     internal fun assertViewStates(vararg expectedStates: S) {
