@@ -12,10 +12,10 @@ class MainInteractor {
     fun fetchRocketList(): Observable<PartialMainViewState> {
         return Observable
                 .timer(2000, TimeUnit.MILLISECONDS)
-                .map {
+                .map<PartialMainViewState> {
                     return@map if (emitError) {
                         emitError = false
-                        PartialMainViewState.ErrorState()
+                        PartialMainViewState.ErrorState
                     } else
                         PartialMainViewState.ListFetchedState(
                                 listOf(

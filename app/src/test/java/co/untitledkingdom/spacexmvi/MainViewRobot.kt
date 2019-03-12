@@ -9,8 +9,10 @@ class MainViewRobot(private val mainViewModel: MainViewModel) {
     private val renderedStates = arrayListOf<MainViewState>()
 
     private val buttonClickSubject = PublishSubject.create<Boolean>()
+    private val clearClickSubject = PublishSubject.create<Boolean>()
 
     private val mainView = object : MainView {
+        override fun emitClearButton(): Observable<Boolean> = clearClickSubject
 
         override fun emitButtonClick(): Observable<Boolean> = buttonClickSubject
 
@@ -24,7 +26,8 @@ class MainViewRobot(private val mainViewModel: MainViewModel) {
     }
 
     fun startView() {
-        mainViewModel.bind(mainView)
+        mainViewModel.attachView(mainView)
+        mainViewModel.bind()
     }
 
     fun stopView() {
@@ -33,5 +36,9 @@ class MainViewRobot(private val mainViewModel: MainViewModel) {
 
     fun emitButtonClick() {
         buttonClickSubject.onNext(true)
+    }
+
+    fun clearButtonClick() {
+        clearClickSubject.onNext(true)
     }
 }

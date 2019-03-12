@@ -1,32 +1,22 @@
 package co.untitledkingdom.spacexmvi
 
-import android.arch.lifecycle.ViewModel
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.BehaviorSubject
+import co.untitledkingdom.spacexmvi.base.BaseViewModel
 
-class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor()) : ViewModel() {
+class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor()) :
+        BaseViewModel<MainViewState, MainView, PartialMainViewState>() {
 
-    private val compositeDisposable = CompositeDisposable()
-    private val stateSubject = BehaviorSubject.create<PartialMainViewState>()
+    override fun bind() {
+        val buttonClickObservable = view().emitButtonClick()
+                .flatMap {
+                    mainInteractor.fetchRocketList().startWith(PartialMainViewState.ProgressState)
+                }
 
-    fun bind(mainView: MainView) {
-        val buttonClickObservable = mainView.emitButtonClick()
-                .flatMap { mainInteractor.fetchRocketList().startWith(PartialMainViewState.ProgressState()) }
+        val clearButtonObservable = view().emitClearButton()
+                .map<PartialMainViewState> { PartialMainViewState.ClearPreviousStates }
 
-        val mergedIntentsObservable = Observable.merge(listOf(buttonClickObservable)).subscribeWith(stateSubject)
-        compositeDisposable.add(mergedIntentsObservable.scan(MainViewState(), this::reduce).subscribe { mainView.render(it) })
-    }
+        val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable)
 
-    fun unbind() {
-        compositeDisposable.clear()
-    }
-
-    private fun reduce(previousState: MainViewState, partialState: PartialMainViewState): MainViewState {
-        return when (partialState) {
-            is PartialMainViewState.ProgressState -> MainViewState(progress = true)
-            is PartialMainViewState.ErrorState -> MainViewState(error = true)
-            is PartialMainViewState.ListFetchedState -> MainViewState(rocketList = partialState.rocketList)
-        }
+        saveState(intents = mergedIntentsObservable, defaultViewState = MainViewState())
+        renderState()
     }
 }

@@ -11,6 +11,12 @@
         android:layout_height="wrap_content"
         android:text="Show me rockets!" />
 
+    <Button
+        android:id="@+id/clearButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rocketsRecyclerView"
         android:layout_width="match_parent"

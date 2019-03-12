@@ -8,7 +8,7 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
-class MainViewModelTest {
+class MainViewModgelTest {
 
     private val mainInteractor: MainInteractor = mock()
 
@@ -43,7 +43,7 @@ class MainViewModelTest {
     @Test
     fun testListFetchingError() {
         whenever(mainInteractor.fetchRocketList()).thenReturn(
-                Observable.just(PartialMainViewState.ErrorState())
+                Observable.just(PartialMainViewState.ErrorState)
         )
 
         val mainViewModel = MainViewModel(mainInteractor)

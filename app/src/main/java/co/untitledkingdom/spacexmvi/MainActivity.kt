@@ -5,36 +5,28 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import co.untitledkingdom.spacexmvi.base.BaseMviActivity
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_main.clearButton
 import kotlinx.android.synthetic.main.activity_main.errorTextView
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
-class MainActivity : AppCompatActivity(), MainView {
+class MainActivity :
+        BaseMviActivity<MainView, MainViewModel>(MainViewModel::class.java),
+        MainView {
 
     private val rocketsAdapter = RocketsAdapter()
-
-    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initializeViewModel()
         initRecyclerView()
-        mainViewModel = ViewModelProviders.of(this)[MainViewModel::class.java]
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mainViewModel.bind(this)
-    }
-
-    override fun onStop() {
-        mainViewModel.unbind()
-        super.onStop()
     }
 
     private fun initRecyclerView() {
@@ -67,15 +59,21 @@ class MainActivity : AppCompatActivity(), MainView {
         rocketsAdapter.setRocketList(rocketList)
     }
 
-    override fun render(mainViewState: MainViewState) {
-        with(mainViewState) {
+    override fun render(viewState: MainViewState) {
+        with(viewState) {
             showProgressBar(progress)
             showError(error)
             showRocketList(rocketList)
         }
     }
 
-    override fun emitButtonClick(): Observable<Boolean> {
-        return RxView.clicks(showMeRocketsButton).map { true }
+    override fun emitButtonClick(): Observable<Boolean> =
+            RxView.clicks(showMeRocketsButton).map { true }
+
+    override fun emitClearButton(): Observable<Boolean> =
+            RxView.clicks(clearButton).map { true }
+
+    override fun initializeViewModel() {
+        initialize(this)
     }
 }
