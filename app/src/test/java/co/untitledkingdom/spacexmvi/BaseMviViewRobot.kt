@@ -14,12 +14,12 @@ abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, 
         Assert.assertEquals(expectedStates.toList(), renderedStates)
     }
 
-    fun startView() {
+    internal fun startView() {
         viewModel.attachView(mainView)
         viewModel.bind()
     }
 
-    fun stopView() {
+    internal fun stopView() {
         viewModel.unbind()
     }
 }

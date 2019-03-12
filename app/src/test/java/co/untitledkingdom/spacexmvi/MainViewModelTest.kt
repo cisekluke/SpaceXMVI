@@ -60,4 +60,29 @@ class MainViewModgelTest {
                 MainViewState(error = true)
         )
     }
+
+    @Test
+    fun `fetch rockets list and clear after that`() {
+        val fetchedRocketList = listOf(Rocket("testRocketName", "url/to/pic"))
+        whenever(mainInteractor.fetchRocketList()).thenReturn(
+                Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
+        )
+
+        val mainViewModel = MainViewModel(mainInteractor)
+        val mainViewRobot = MainViewRobot(mainViewModel)
+
+        mainViewRobot.startView()
+        mainViewRobot.emitButtonClick()
+        mainViewRobot.clearButtonClick()
+        mainViewRobot.stopView()
+        mainViewRobot.startView()
+
+        mainViewRobot.assertViewStates(
+                MainViewState(),
+                MainViewState(progress = true),
+                MainViewState(rocketList = fetchedRocketList),
+                MainViewState(),
+                MainViewState()
+        )
+    }
 }
