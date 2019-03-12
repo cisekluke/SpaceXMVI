@@ -1,8 +1,6 @@
 package co.untitledkingdom.spacexmvi
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity

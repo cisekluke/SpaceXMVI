@@ -23,7 +23,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
         compositeDisposable.clear()
     }
 
-    protected fun view() = view
+    protected fun view(): V = view
 
     protected fun mergeStates(vararg expectedStates: Observable<P>): Observable<P> =
             Observable.merge(expectedStates.asIterable())

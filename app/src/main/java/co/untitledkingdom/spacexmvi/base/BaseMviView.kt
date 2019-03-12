@@ -1,6 +1,6 @@
 package co.untitledkingdom.spacexmvi.base
 
-interface BaseMviView<V : BaseMviViewState> {
+interface BaseMviView<in V : BaseMviViewState> {
 
     fun render(viewState: V)
 }
