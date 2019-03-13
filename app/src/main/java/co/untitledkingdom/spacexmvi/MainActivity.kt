@@ -23,7 +23,10 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /** */
         initializeViewModel()
+
         initRecyclerView()
     }
 
@@ -57,6 +60,7 @@ class MainActivity :
         rocketsAdapter.setRocketList(rocketList)
     }
 
+    /** */
     override fun render(viewState: MainViewState) {
         with(viewState) {
             showProgressBar(progress)
@@ -71,6 +75,7 @@ class MainActivity :
     override fun emitClearButton(): Observable<Boolean> =
             RxView.clicks(clearButton).map { true }
 
+    /** */
     override fun initializeViewModel() {
         initialize(this)
     }

@@ -25,7 +25,7 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
         viewModel.unbind()
     }
 
-    abstract fun initializeViewModel()
+    protected abstract fun initializeViewModel()
 
     protected fun initialize(view: V) {
         viewModel.attachView(view)

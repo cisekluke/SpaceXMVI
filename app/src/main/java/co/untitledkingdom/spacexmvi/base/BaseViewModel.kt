@@ -28,12 +28,12 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
     protected fun mergeStates(vararg expectedStates: Observable<P>): Observable<P> =
             Observable.merge(expectedStates.asIterable())
 
-    protected fun saveState(intents: Observable<P>, defaultViewState: S) {
+    protected fun saveStates(intents: Observable<P>, defaultViewState: S) {
         intents.scan(getViewState(defaultViewState), this::reduce)
                 .subscribe(stateSubject)
     }
 
-    protected fun renderState() {
+    protected fun renderStates() {
         compositeDisposable.add(stateSubject.distinctUntilChanged().subscribe { state -> view.render(state) })
     }
 

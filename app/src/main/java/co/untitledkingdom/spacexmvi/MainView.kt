@@ -9,5 +9,6 @@ interface MainView : BaseMviView<MainViewState> {
 
     fun emitClearButton(): Observable<Boolean>
 
+    /** */
     override fun render(viewState: MainViewState)
 }

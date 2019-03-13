@@ -7,8 +7,8 @@ import junit.framework.Assert
 
 abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, *>, S : BaseMviViewState>(private val viewModel: M) {
 
-    abstract val renderedStates: ArrayList<in S>
-    abstract val mainView: V
+    protected abstract val renderedStates: ArrayList<in S>
+    protected abstract val mainView: V
 
     /** compares expected states with rendered */
     internal fun assertViewStates(vararg expectedStates: S) {

@@ -6,17 +6,21 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
         BaseViewModel<MainViewState, MainView, PartialMainViewState>() {
 
     override fun bind() {
-        val buttonClickObservable = view().emitButtonClick()
-                .flatMap {
-                    mainInteractor.fetchRocketList().startWith(PartialMainViewState.ProgressState)
-                }
+        val buttonClickObservable =
+                view().emitButtonClick()
+                        .flatMap {
+                            mainInteractor.fetchRocketList().startWith(PartialMainViewState.ProgressState)
+                        }
 
-        val clearButtonObservable = view().emitClearButton()
-                .map<PartialMainViewState> { PartialMainViewState.ClearPreviousStates }
+        val clearButtonObservable =
+                view().emitClearButton()
+                        .map<PartialMainViewState> {
+                            PartialMainViewState.ClearPreviousStates
+                        }
 
         val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable)
 
-        saveState(intents = mergedIntentsObservable, defaultViewState = MainViewState())
-        renderState()
+        saveStates(intents = mergedIntentsObservable, defaultViewState = MainViewState())
+        renderStates()
     }
 }
