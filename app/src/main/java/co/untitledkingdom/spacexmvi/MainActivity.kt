@@ -25,7 +25,7 @@ class MainActivity :
         setContentView(R.layout.activity_main)
 
         /** */
-        initializeViewModel()
+        initialize(this)
 
         initRecyclerView()
     }
@@ -74,9 +74,4 @@ class MainActivity :
 
     override fun emitClearButton(): Observable<Boolean> =
         RxView.clicks(clearButton).map { true }
-
-    /** */
-    override fun initializeViewModel() {
-        initialize(this)
-    }
 }
