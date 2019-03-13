@@ -11,7 +11,8 @@ class RocketsAdapter : RecyclerView.Adapter<RocketViewHolder>() {
     private val rocketList = arrayListOf<Rocket>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RocketViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_rocket, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_rocket, parent, false)
         return RocketViewHolder(itemView)
     }
 

@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-        BaseMviActivity<MainView, MainViewModel>(MainViewModel::class.java),
-        MainView {
+    BaseMviActivity<MainView, MainViewModel>(MainViewModel::class.java),
+    MainView {
 
     private val rocketsAdapter = RocketsAdapter()
 
@@ -70,10 +70,10 @@ class MainActivity :
     }
 
     override fun emitButtonClick(): Observable<Boolean> =
-            RxView.clicks(showMeRocketsButton).map { true }
+        RxView.clicks(showMeRocketsButton).map { true }
 
     override fun emitClearButton(): Observable<Boolean> =
-            RxView.clicks(clearButton).map { true }
+        RxView.clicks(clearButton).map { true }
 
     /** */
     override fun initializeViewModel() {

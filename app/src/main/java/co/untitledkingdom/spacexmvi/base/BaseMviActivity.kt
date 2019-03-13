@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
 abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>>(
-        private val modelClass: Class<M>
+    private val modelClass: Class<M>
 ) : AppCompatActivity() {
 
     private lateinit var viewModel: M
