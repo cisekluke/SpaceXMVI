@@ -10,9 +10,12 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
 
     private lateinit var viewModel: M
 
+    abstract fun getView(): V
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(modelClass)
+        initialize()
     }
 
     override fun onStart() {
@@ -25,7 +28,7 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
         super.onStop()
     }
 
-    protected fun initialize(view: V) {
-        viewModel.attachView(view)
+    private fun initialize() {
+        viewModel.attachView(getView())
     }
 }

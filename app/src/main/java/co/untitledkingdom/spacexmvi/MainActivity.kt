@@ -24,8 +24,6 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initialize(this)
-
         initRecyclerView()
     }
 
@@ -66,6 +64,8 @@ class MainActivity :
             showRocketList(rocketList)
         }
     }
+
+    override fun getView(): MainView = this
 
     override fun emitButtonClick(): Observable<Boolean> =
         RxView.clicks(showMeRocketsButton).map { true }
