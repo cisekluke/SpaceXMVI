@@ -21,8 +21,8 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
     }
 
     override fun onStop() {
-        super.onStop()
         viewModel.unbind()
+        super.onStop()
     }
 
     protected fun initialize(view: V) {

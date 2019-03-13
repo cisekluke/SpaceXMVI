@@ -70,13 +70,13 @@ class MainViewModgelTest {
                 Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
         )
 
-        /** initialize view model */
+        /** initialize fromView model */
         val mainViewModel = MainViewModel(mainInteractor)
 
-        /** initialize view robot using view model just created */
+        /** initialize fromView robot using fromView model just created */
         val mainViewRobot = MainViewRobot(mainViewModel)
 
-        /** attach the view and run bind() method */
+        /** attach the fromView and run bind() method */
         mainViewRobot.startView()
 
         /** classic action emitters */
@@ -87,7 +87,7 @@ class MainViewModgelTest {
         mainViewRobot.stopView()
         mainViewRobot.startView()
 
-        /** check if view states has been rendered properly */
+        /** check if fromView states has been rendered properly */
         mainViewRobot.assertViewStates(
                 MainViewState(),
                 MainViewState(progress = true),

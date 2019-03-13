@@ -20,7 +20,6 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
 
         val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable)
 
-        saveStates(intents = mergedIntentsObservable, defaultViewState = MainViewState())
-        renderStates()
+        render(intents = mergedIntentsObservable, defaultViewState = MainViewState())
     }
 }

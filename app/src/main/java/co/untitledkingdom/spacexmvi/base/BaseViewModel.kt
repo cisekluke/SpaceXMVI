@@ -1,6 +1,7 @@
 package co.untitledkingdom.spacexmvi.base
 
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -20,6 +21,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
         view = mView
     }
 
+    @CallSuper
     open fun unbind() {
         compositeDisposable.clear()
     }
@@ -29,13 +31,14 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
     protected fun mergeStates(vararg expectedStates: Observable<P>): Observable<P> =
         Observable.merge(expectedStates.asIterable())
 
-    protected fun saveStates(intents: Observable<P>, defaultViewState: S) {
+    protected fun render(intents: Observable<P>, defaultViewState: S) {
         intents.scan(getViewState(defaultViewState), this::reduce)
             .subscribe(stateSubject)
+        renderStates()
     }
 
     @MainThread
-    protected fun renderStates() {
+    private fun renderStates() {
         compositeDisposable.add(
             stateSubject.distinctUntilChanged()
                 .subscribe { state -> view.render(state) })
