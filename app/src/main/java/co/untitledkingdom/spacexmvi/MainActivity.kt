@@ -24,7 +24,6 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /** */
         initialize(this)
 
         initRecyclerView()
@@ -60,7 +59,6 @@ class MainActivity :
         rocketsAdapter.setRocketList(rocketList)
     }
 
-    /** */
     override fun render(viewState: MainViewState) {
         with(viewState) {
             showProgressBar(progress)
