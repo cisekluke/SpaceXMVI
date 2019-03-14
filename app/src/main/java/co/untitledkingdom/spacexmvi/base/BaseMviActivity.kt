@@ -3,6 +3,8 @@ package co.untitledkingdom.spacexmvi.base
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseMviActivity<V : BaseMviView<*, *>, in M : BaseViewModel<*, V, *>>(
     private val modelClass: Class<M>
