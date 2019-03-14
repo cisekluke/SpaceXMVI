@@ -5,7 +5,7 @@ import co.untitledkingdom.spacexmvi.base.BaseMviViewState
 import co.untitledkingdom.spacexmvi.base.BaseViewModel
 import junit.framework.Assert
 
-abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, *>, S : BaseMviViewState>(
+abstract class BaseMviViewRobot<V : BaseMviView<*, *>, out M : BaseViewModel<*, V, *>, S : BaseMviViewState>(
     private val viewModel: M
 ) {
 

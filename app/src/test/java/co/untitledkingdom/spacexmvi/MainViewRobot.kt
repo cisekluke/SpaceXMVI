@@ -5,26 +5,26 @@ import io.reactivex.subjects.PublishSubject
 
 class MainViewRobot(mainViewModel: MainViewModel) : BaseMviViewRobot<MainView, MainViewModel, MainViewState>(mainViewModel) {
 
-    private val buttonClickSubject = PublishSubject.create<Boolean>()
-    private val clearClickSubject = PublishSubject.create<Boolean>()
+    private val buttonClickSubject = PublishSubject.create<MainIntent>()
+    private val clearClickSubject = PublishSubject.create<MainIntent>()
 
     override val renderedStates = arrayListOf<MainViewState>()
 
     override val view = object : MainView {
-        override fun emitClearButton(): Observable<Boolean> = clearClickSubject
 
-        override fun emitButtonClick(): Observable<Boolean> = buttonClickSubject
+        override fun emitIntent(): Observable<MainIntent> =
+            Observable.merge(buttonClickSubject, clearClickSubject)
 
-        override fun render(mainViewState: MainViewState) {
-            renderedStates.add(mainViewState)
+        override fun render(viewState: MainViewState) {
+            renderedStates.add(viewState)
         }
     }
 
     fun emitButtonClick() {
-        buttonClickSubject.onNext(true)
+        buttonClickSubject.onNext(MainIntent.FetchRocketsState)
     }
 
     fun clearButtonClick() {
-        clearClickSubject.onNext(true)
+        clearClickSubject.onNext(MainIntent.ClearState)
     }
 }

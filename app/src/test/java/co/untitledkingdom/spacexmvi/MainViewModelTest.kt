@@ -34,7 +34,6 @@ class MainViewModgelTest {
         mainViewRobot.assertViewStates(
                 MainViewState(),
                 MainViewState(progress = true),
-                MainViewState(rocketList = fetchedRocketList),
                 MainViewState(rocketList = fetchedRocketList)
         )
     }
@@ -56,7 +55,6 @@ class MainViewModgelTest {
         mainViewRobot.assertViewStates(
                 MainViewState(),
                 MainViewState(progress = true),
-                MainViewState(error = true),
                 MainViewState(error = true)
         )
     }
@@ -92,7 +90,6 @@ class MainViewModgelTest {
                 MainViewState(),
                 MainViewState(progress = true),
                 MainViewState(rocketList = fetchedRocketList),
-                MainViewState(),
                 MainViewState() /** check the same state for the second time due to lifecycle changes */
         )
     }
