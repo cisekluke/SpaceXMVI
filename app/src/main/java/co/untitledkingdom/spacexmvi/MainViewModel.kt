@@ -13,7 +13,7 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
     override fun <I : BaseMviIntent> intentToAction(intent: I): Observable<MainAction> =
         when (intent) {
             is MainIntent.FetchRocketsState -> mainInteractor.fetchRocketList().startWith(MainAction.ShowProgress)
-            is MainIntent.ClearState -> Observable.just(MainAction.ClearStates)
-            else -> Observable.just(MainAction.ClearStates)
+            is MainIntent.ClearState -> just(MainAction.ClearStates)
+            else -> just(MainAction.Nothing)
         }
 }

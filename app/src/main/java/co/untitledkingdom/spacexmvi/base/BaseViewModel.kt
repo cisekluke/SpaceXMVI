@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 
-abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, P : BaseMviPartialState<S>> :
+abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
 
     private lateinit var view: V
@@ -31,7 +31,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, P : Ba
 
     protected fun view(): V = view
 
-    private fun render(intents: Observable<P>) {
+    private fun render(intents: Observable<A>) {
         intents.scan(getViewState(defaultViewState), this::reduce)
             .replay(1)
             .autoConnect(0)
@@ -46,11 +46,13 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, P : Ba
                 .subscribe { state -> view.render(state) })
     }
 
-    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<P>
+    protected fun just(intent: A): Observable<A> = Observable.just(intent)
+
+    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
     private fun mapIntents() = view.emitIntent().flatMap { intentToAction(it) }
 
     private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
 
-    private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
+    private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
 }
