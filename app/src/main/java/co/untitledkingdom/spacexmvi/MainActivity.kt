@@ -21,8 +21,8 @@ class MainActivity :
 
     private val rocketsAdapter = RocketsAdapter()
 
-    private val buttonSubject = PublishSubject.create<Boolean>()
-    private val clearSubject = PublishSubject.create<Boolean>()
+    private lateinit var buttonSubject: PublishSubject<Boolean>
+    private lateinit var clearSubject: PublishSubject<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +78,11 @@ class MainActivity :
     }
 
     override fun getView(): MainView = this
+
+    override fun createEmitters() {
+        buttonSubject = PublishSubject.create<Boolean>()
+        clearSubject = PublishSubject.create<Boolean>()
+    }
 
     override fun emitButtonClick(): Observable<Boolean> = buttonSubject
 
