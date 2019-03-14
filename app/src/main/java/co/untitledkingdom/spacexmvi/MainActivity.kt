@@ -86,8 +86,3 @@ class MainActivity :
 
     override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
 }
-
-sealed class MainIntent : BaseMviIntent{
-    object FetchRocketsState : MainIntent()
-    object ClearState : MainIntent()
-}
