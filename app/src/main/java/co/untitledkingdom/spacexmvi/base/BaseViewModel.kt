@@ -17,8 +17,8 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
 
     abstract fun bind()
 
-    internal fun attachView(mView: V) {
-        view = mView
+    internal fun attachView(view: V) {
+        this.view = view
     }
 
     @CallSuper
