@@ -9,15 +9,15 @@ class MainInteractor {
 
     var emitError = false
 
-    fun fetchRocketList(): Observable<PartialMainViewState> {
+    fun fetchRocketList(): Observable<MainAction> {
         return Observable
             .timer(2000, TimeUnit.MILLISECONDS)
-            .map<PartialMainViewState> {
+            .map<MainAction> {
                 return@map if (emitError) {
                     emitError = false
-                    PartialMainViewState.ErrorState
+                    MainAction.ErrorState
                 } else
-                    PartialMainViewState.ListFetchedState(
+                    MainAction.ListFetchedState(
                         listOf(
                             Rocket(
                                 "Falcon 1",

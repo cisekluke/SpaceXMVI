@@ -21,19 +21,19 @@ class MainActivity :
 
     private val rocketsAdapter = RocketsAdapter()
 
-    private lateinit var buttonSubject: PublishSubject<Boolean>
-    private lateinit var clearSubject: PublishSubject<Boolean>
+    private lateinit var buttonSubject: PublishSubject<MainIntent>
+    private lateinit var clearSubject: PublishSubject<MainIntent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         showMeRocketsButton.setOnClickListener {
-            buttonSubject.onNext(true)
+            buttonSubject.onNext(MainIntent.FetchRocketsState)
         }
 
         clearButton.setOnClickListener {
-            buttonSubject.onNext(true)
+            buttonSubject.onNext(MainIntent.ClearState)
         }
 
         initRecyclerView()
@@ -80,11 +80,14 @@ class MainActivity :
     override fun getView(): MainView = this
 
     override fun createEmitters() {
-        buttonSubject = PublishSubject.create<Boolean>()
-        clearSubject = PublishSubject.create<Boolean>()
+        buttonSubject = PublishSubject.create<MainIntent>()
+        clearSubject = PublishSubject.create<MainIntent>()
     }
 
-    override fun emitButtonClick(): Observable<Boolean> = buttonSubject
+    override fun emitIntents(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
+}
 
-    override fun emitClearButton(): Observable<Boolean> = clearSubject
+sealed class MainIntent {
+    object FetchRocketsState : MainIntent()
+    object ClearState : MainIntent()
 }

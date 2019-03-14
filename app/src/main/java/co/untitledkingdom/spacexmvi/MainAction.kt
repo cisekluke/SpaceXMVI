@@ -3,24 +3,24 @@ package co.untitledkingdom.spacexmvi
 import co.untitledkingdom.spacexmvi.base.BaseMviPartialState
 import co.untitledkingdom.spacexmvi.models.Rocket
 
-sealed class PartialMainViewState : BaseMviPartialState<MainViewState> {
+sealed class MainAction : BaseMviPartialState<MainViewState> {
 
-    object ProgressState : PartialMainViewState() {
+    object ShowProgress : MainAction() {
         /** */
         override fun reduce(previousState: MainViewState) = MainViewState(progress = true)
     }
 
-    object ErrorState : PartialMainViewState() {
+    object ErrorState : MainAction() {
         /** */
         override fun reduce(previousState: MainViewState) = MainViewState(error = true)
     }
 
-    class ListFetchedState(private val rocketList: List<Rocket>) : PartialMainViewState() {
+    class ListFetchedState(private val rocketList: List<Rocket>) : MainAction() {
         /** */
         override fun reduce(previousState: MainViewState) = MainViewState(rocketList = rocketList)
     }
 
-    object ClearPreviousStates : PartialMainViewState() {
+    object ClearStates : MainAction() {
         /** */
         override fun reduce(previousState: MainViewState) = MainViewState()
     }

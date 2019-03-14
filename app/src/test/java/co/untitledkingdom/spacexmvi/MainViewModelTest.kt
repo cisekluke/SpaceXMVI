@@ -20,7 +20,7 @@ class MainViewModgelTest {
     fun testListFetchingSuccess() {
         val fetchedRocketList = listOf(Rocket("testRocketName", "url/to/pic"))
         whenever(mainInteractor.fetchRocketList()).thenReturn(
-                Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
+                Observable.just(MainAction.ListFetchedState(fetchedRocketList))
         )
 
         val mainViewModel = MainViewModel(mainInteractor)
@@ -42,7 +42,7 @@ class MainViewModgelTest {
     @Test
     fun testListFetchingError() {
         whenever(mainInteractor.fetchRocketList()).thenReturn(
-                Observable.just(PartialMainViewState.ErrorState)
+                Observable.just(MainAction.ErrorState)
         )
 
         val mainViewModel = MainViewModel(mainInteractor)
@@ -67,7 +67,7 @@ class MainViewModgelTest {
         /** mock necessary classes */
         val fetchedRocketList = listOf(Rocket("testRocketName", "url/to/pic"))
         whenever(mainInteractor.fetchRocketList()).thenReturn(
-                Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
+                Observable.just(MainAction.ListFetchedState(fetchedRocketList))
         )
 
         /** initialize fromView model */

@@ -5,7 +5,5 @@ import io.reactivex.Observable
 
 interface MainView : BaseMviView<MainViewState> {
 
-    fun emitButtonClick(): Observable<Boolean>
-
-    fun emitClearButton(): Observable<Boolean>
+    fun emitIntents(): Observable<MainIntent>
 }
