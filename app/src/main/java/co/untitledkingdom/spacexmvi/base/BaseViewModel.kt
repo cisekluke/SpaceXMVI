@@ -16,14 +16,13 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private val stopSubject = PublishSubject.create<Any>()
+
     protected abstract val defaultViewState: S
+
+    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
     internal fun bind() {
         render(intents = mapIntents())
-    }
-
-    internal fun attachView(mView: V) {
-        view = mView
     }
 
     @CallSuper
@@ -32,13 +31,18 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         stopSubject.onNext(true)
     }
 
-    protected fun view(): V = view
+    internal fun attachView(view: V) {
+        this.view = view
+    }
+
+    protected fun just(intent: A): Observable<A> = Observable.just(intent)
 
     private fun render(intents: Observable<A>) {
-        intents.scan(getViewState(defaultViewState), this::reduce)
+        intents.scan(getViewState(), this::reduce)
             .replay(1)
             .autoConnect(0)
             .subscribe(stateSubject)
+
         renderStates()
     }
 
@@ -49,15 +53,11 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
                 .subscribe { state -> view.render(state) })
     }
 
-    protected fun just(intent: A): Observable<A> = Observable.just(intent)
-
-    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
-
     private fun mapIntents() = view.emitIntent()
         .takeUntil(stopSubject)
         .flatMap { intentToAction(it) }
 
-    private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
+    private fun getViewState() = stateSubject.value ?: defaultViewState
 
     private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
 }

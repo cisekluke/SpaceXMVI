@@ -39,6 +39,18 @@ class MainActivity :
         initRecyclerView()
     }
 
+    override fun render(viewState: MainViewState) {
+        with(viewState) {
+            showProgressBar(progress)
+            showError(error)
+            showRocketList(rocketList)
+        }
+    }
+
+    override fun getView(): MainView = this
+
+    override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
+
     private fun initRecyclerView() {
         rocketsRecyclerView.layoutManager = LinearLayoutManager(this)
         rocketsRecyclerView.adapter = rocketsAdapter
@@ -68,16 +80,4 @@ class MainActivity :
     private fun showRocketList(rocketList: List<Rocket>) {
         rocketsAdapter.setRocketList(rocketList)
     }
-
-    override fun render(viewState: MainViewState) {
-        with(viewState) {
-            showProgressBar(progress)
-            showError(error)
-            showRocketList(rocketList)
-        }
-    }
-
-    override fun getView(): MainView = this
-
-    override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
 }
