@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
+import co.untitledkingdom.spacexmvi.base.BaseMviIntent
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
@@ -84,10 +84,10 @@ class MainActivity :
         clearSubject = PublishSubject.create<MainIntent>()
     }
 
-    override fun emitIntents(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
+    override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
 }
 
-sealed class MainIntent {
+sealed class MainIntent : BaseMviIntent{
     object FetchRocketsState : MainIntent()
     object ClearState : MainIntent()
 }

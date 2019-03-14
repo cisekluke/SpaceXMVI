@@ -16,5 +16,5 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
             is MainIntent.ClearState -> Observable.just(MainAction.ClearStates)
         }
 
-    private fun mapIntents() = view().emitIntents().flatMap { intentsToAction(it) }
+    private fun mapIntents() = view().emitIntent().flatMap { intentsToAction(it) }
 }
