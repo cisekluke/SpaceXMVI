@@ -21,8 +21,8 @@ class MainActivity :
 
     private val rocketsAdapter = RocketsAdapter()
 
-    private lateinit var buttonSubject: PublishSubject<MainIntent>
-    private lateinit var clearSubject: PublishSubject<MainIntent>
+    private val buttonSubject = PublishSubject.create<MainIntent>()
+    private val clearSubject = PublishSubject.create<MainIntent>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,11 +78,6 @@ class MainActivity :
     }
 
     override fun getView(): MainView = this
-
-    override fun createEmitters() {
-        buttonSubject = PublishSubject.create<MainIntent>()
-        clearSubject = PublishSubject.create<MainIntent>()
-    }
 
     override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
 }

@@ -6,6 +6,7 @@ import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
@@ -14,6 +15,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
+    private val stopSubject = PublishSubject.create<Any>()
     protected abstract val defaultViewState: S
 
     internal fun bind() {
@@ -27,6 +29,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     @CallSuper
     internal open fun unbind() {
         compositeDisposable.clear()
+        stopSubject.onNext(true)
     }
 
     protected fun view(): V = view
@@ -50,7 +53,9 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
-    private fun mapIntents() = view.emitIntent().flatMap { intentToAction(it) }
+    private fun mapIntents() = view.emitIntent()
+        .takeUntil(stopSubject)
+        .flatMap { intentToAction(it) }
 
     private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
 
