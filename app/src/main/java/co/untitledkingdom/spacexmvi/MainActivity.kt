@@ -8,6 +8,7 @@ import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
 import kotlinx.android.synthetic.main.activity_main.errorTextView
 import kotlinx.android.synthetic.main.activity_main.progressBar
@@ -20,9 +21,20 @@ class MainActivity :
 
     private val rocketsAdapter = RocketsAdapter()
 
+    private val buttonSubject = PublishSubject.create<Boolean>()
+    private val clearSubject = PublishSubject.create<Boolean>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        showMeRocketsButton.setOnClickListener {
+            buttonSubject.onNext(true)
+        }
+
+        clearButton.setOnClickListener {
+            buttonSubject.onNext(true)
+        }
 
         initRecyclerView()
     }
@@ -67,9 +79,7 @@ class MainActivity :
 
     override fun getView(): MainView = this
 
-    override fun emitButtonClick(): Observable<Boolean> =
-        RxView.clicks(showMeRocketsButton).map { true }
+    override fun emitButtonClick(): Observable<Boolean> = buttonSubject
 
-    override fun emitClearButton(): Observable<Boolean> =
-        RxView.clicks(clearButton).map { true }
+    override fun emitClearButton(): Observable<Boolean> = clearSubject
 }
