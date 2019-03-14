@@ -28,11 +28,10 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
 
     protected fun view(): V = view
 
-    protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
-        Observable.merge(states.asIterable())
-
     protected fun render(intents: Observable<P>, defaultViewState: S) {
         intents.scan(getViewState(defaultViewState), this::reduce)
+            .replay(1)
+            .autoConnect(0)
             .subscribe(stateSubject)
         renderStates()
     }

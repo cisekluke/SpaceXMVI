@@ -7,7 +7,7 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
     BaseViewModel<MainViewState, MainView, MainAction>() {
 
     override fun bind() {
-        render(intents = view().emitIntents().flatMap { intentsToAction(it) }, defaultViewState = MainViewState())
+        render(intents = mapIntents(), defaultViewState = MainViewState())
     }
 
     private fun intentsToAction(intent: MainIntent): Observable<MainAction> =
@@ -15,4 +15,6 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
             is MainIntent.FetchRocketsState -> mainInteractor.fetchRocketList().startWith(MainAction.ShowProgress)
             is MainIntent.ClearState -> Observable.just(MainAction.ClearStates)
         }
+
+    private fun mapIntents() = view().emitIntents().flatMap { intentsToAction(it) }
 }
