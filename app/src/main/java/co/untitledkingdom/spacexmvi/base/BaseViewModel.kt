@@ -6,7 +6,6 @@ import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
@@ -15,20 +14,24 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
-    private val stopSubject = PublishSubject.create<Any>()
+    private var initialized = false
 
     protected abstract val defaultViewState: S
 
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
     internal fun bind() {
-        render(intents = mapIntents())
+        if (!initialized) {
+            saveState(intents = mapIntents())
+            initialized = true
+        } else {
+            renderStates()
+        }
     }
 
     @CallSuper
     internal open fun unbind() {
         compositeDisposable.clear()
-        stopSubject.onNext(true)
     }
 
     internal fun attachView(view: V) {
@@ -37,7 +40,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     protected fun just(intent: A): Observable<A> = Observable.just(intent)
 
-    private fun render(intents: Observable<A>) {
+    private fun saveState(intents: Observable<A>) {
         intents.scan(getViewState(), this::reduce)
             .replay(1)
             .autoConnect(0)
@@ -50,11 +53,11 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     private fun renderStates() {
         compositeDisposable.add(
             stateSubject.distinctUntilChanged()
-                .subscribe { state -> view.render(state) })
+                .subscribe { state -> view.render(state) }
+        )
     }
 
     private fun mapIntents() = view.emitIntent()
-        .takeUntil(stopSubject)
         .flatMap { intentToAction(it) }
 
     private fun getViewState() = stateSubject.value ?: defaultViewState
