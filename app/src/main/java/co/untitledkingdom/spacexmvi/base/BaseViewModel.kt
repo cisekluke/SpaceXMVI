@@ -38,6 +38,10 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         this.view = view
     }
 
+    internal fun deinitialize() {
+        initialized = false
+    }
+
     protected fun just(intent: A): Observable<A> = Observable.just(intent)
 
     private fun saveState(intents: Observable<A>) {

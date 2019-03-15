@@ -28,6 +28,11 @@ abstract class BaseMviActivity<V : BaseMviView<*, *>, in M : BaseViewModel<*, V,
         super.onStop()
     }
 
+    override fun onDestroy() {
+        viewModel.deinitialize()
+        super.onDestroy()
+    }
+
     private fun initialize() {
         viewModel.attachView(getView())
     }
