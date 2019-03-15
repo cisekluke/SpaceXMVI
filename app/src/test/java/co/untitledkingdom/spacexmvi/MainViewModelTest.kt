@@ -1,5 +1,9 @@
 package co.untitledkingdom.spacexmvi
 
+import co.untitledkingdom.spacexmvi.main.MainAction
+import co.untitledkingdom.spacexmvi.main.MainInteractor
+import co.untitledkingdom.spacexmvi.main.MainViewModel
+import co.untitledkingdom.spacexmvi.main.MainViewState
 import co.untitledkingdom.spacexmvi.models.Rocket
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
@@ -32,9 +36,9 @@ class MainViewModgelTest {
         mainViewRobot.startView()
 
         mainViewRobot.assertViewStates(
-                MainViewState(),
-                MainViewState(progress = true),
-                MainViewState(rocketList = fetchedRocketList)
+            MainViewState(),
+            MainViewState(progress = true),
+            MainViewState(rocketList = fetchedRocketList)
         )
     }
 
@@ -53,9 +57,9 @@ class MainViewModgelTest {
         mainViewRobot.startView()
 
         mainViewRobot.assertViewStates(
-                MainViewState(),
-                MainViewState(progress = true),
-                MainViewState(error = true)
+            MainViewState(),
+            MainViewState(progress = true),
+            MainViewState(error = true)
         )
     }
 
@@ -87,10 +91,11 @@ class MainViewModgelTest {
 
         /** check if fromView states has been rendered properly */
         mainViewRobot.assertViewStates(
-                MainViewState(),
-                MainViewState(progress = true),
-                MainViewState(rocketList = fetchedRocketList),
-                MainViewState() /** check the same state for the second time due to lifecycle changes */
+            MainViewState(),
+            MainViewState(progress = true),
+            MainViewState(rocketList = fetchedRocketList),
+            MainViewState()
+            /** check the same state for the second time due to lifecycle changes */
         )
     }
 }

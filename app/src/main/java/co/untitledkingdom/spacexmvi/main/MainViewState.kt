@@ -1,4 +1,4 @@
-package co.untitledkingdom.spacexmvi
+package co.untitledkingdom.spacexmvi.main
 
 import co.untitledkingdom.spacexmvi.base.BaseMviViewState
 import co.untitledkingdom.spacexmvi.models.Rocket
