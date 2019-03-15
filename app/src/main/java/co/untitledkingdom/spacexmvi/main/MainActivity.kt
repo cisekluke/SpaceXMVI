@@ -1,12 +1,14 @@
 package co.untitledkingdom.spacexmvi.main
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
+import co.untitledkingdom.spacexmvi.simple.SimpleFragment
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
@@ -45,6 +47,7 @@ class MainActivity :
             showProgressBar(progress)
             showError(error)
             showRocketList(rocketList)
+            displayFragment(displayFragment)
         }
     }
 
@@ -80,5 +83,13 @@ class MainActivity :
 
     private fun showRocketList(rocketList: List<Rocket>) {
         rocketsAdapter.setRocketList(rocketList)
+    }
+
+    private fun displayFragment(showFragment: Boolean) {
+        if (showFragment) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.add(R.id.fragmentContainer, SimpleFragment(), "TAG")
+            fragmentTransaction.commit()
+        }
     }
 }

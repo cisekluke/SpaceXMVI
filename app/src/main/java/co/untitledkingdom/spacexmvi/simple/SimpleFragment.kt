@@ -11,11 +11,20 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.simple_fragment.button
 import kotlinx.android.synthetic.main.simple_fragment.input
+import kotlinx.android.synthetic.main.simple_fragment.text
 
 class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel>(
     SimpleViewModel::class.java,
     MainActivity()
 ), SimpleView {
+
+    companion object {
+        fun newInstance(): SimpleFragment {
+            val playFragment = SimpleFragment()
+
+            return playFragment
+        }
+    }
 
     private val buttonSubject = PublishSubject.create<SimpleIntent>()
 
@@ -35,7 +44,9 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
     }
 
     override fun render(viewState: SimpleViewState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        with(viewState) {
+            text.text = output
+        }
     }
 
     override fun emitIntent(): Observable<SimpleIntent> = buttonSubject
