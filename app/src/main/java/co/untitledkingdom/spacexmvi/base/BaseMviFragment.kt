@@ -13,8 +13,8 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *>, V : BaseMviView<*, *>,
 
     protected abstract fun view(): V
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity).get(modelClass)
         initialize()
     }
