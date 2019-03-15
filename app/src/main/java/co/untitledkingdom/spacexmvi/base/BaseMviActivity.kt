@@ -29,7 +29,7 @@ abstract class BaseMviActivity<V : BaseMviView<*, *>, in M : BaseViewModel<*, V,
     }
 
     override fun onDestroy() {
-        viewModel.deinitialize()
+        viewModel.unsubscribe()
         super.onDestroy()
     }
 
