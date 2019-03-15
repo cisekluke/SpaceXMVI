@@ -18,7 +18,6 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
 
     override fun onStart() {
         super.onStart()
-        createEmitters()
         viewModel.bind()
     }
 
@@ -27,9 +26,12 @@ abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>
         super.onStop()
     }
 
-    abstract fun getView(): V
+    override fun onDestroy() {
+        viewModel.deinitialize()
+        super.onDestroy()
+    }
 
-    abstract fun createEmitters()
+    abstract fun getView(): V
 
     private fun initialize() {
         viewModel.attachView(getView())

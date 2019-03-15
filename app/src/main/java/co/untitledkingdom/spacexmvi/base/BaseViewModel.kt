@@ -14,6 +14,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
+    private var initialized = false
 
     abstract fun bind()
 
@@ -26,14 +27,21 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
         compositeDisposable.clear()
     }
 
+    internal fun deinitialize() {
+        initialized = false
+    }
+
     protected fun view(): V = view
 
     protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
         Observable.merge(states.asIterable())
 
     protected fun render(intents: Observable<P>, defaultViewState: S) {
-        intents.scan(getViewState(defaultViewState), this::reduce)
-            .subscribe(stateSubject)
+        if (!initialized) {
+            intents.scan(getViewState(defaultViewState), this::reduce)
+               .subscribe(stateSubject)
+            initialized = true
+        }
         renderStates()
     }
 
