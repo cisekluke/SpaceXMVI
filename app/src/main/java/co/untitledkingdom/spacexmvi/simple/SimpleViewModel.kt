@@ -10,6 +10,9 @@ class SimpleViewModel : BaseViewModel<SimpleViewState, SimpleView, SimpleAction>
         get() = SimpleViewState()
 
     override fun <I : BaseMviIntent> intentToAction(intent: I): Observable<SimpleAction> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return when (intent) {
+            is SimpleIntent.ShowOutputStage -> just(SimpleAction.DisplayOutput(intent.input))
+            else -> just(SimpleAction.Nothing)
+        }
     }
 }
