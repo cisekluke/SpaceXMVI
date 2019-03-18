@@ -1,6 +1,5 @@
 package co.untitledkingdom.spacexmvi.simple
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +14,10 @@ import kotlinx.android.synthetic.main.simple_fragment.input
 import kotlinx.android.synthetic.main.simple_fragment.text
 
 class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel>(
-    SimpleViewModel::class.java,
-    MainActivity()
+    SimpleViewModel::class.java
 ), SimpleView {
 
-
     private val buttonSubject = PublishSubject.create<SimpleIntent>()
-    override lateinit var parent: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,10 +34,7 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
         }
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        parent = context as MainActivity
-    }
+    override fun setActivity(): MainActivity = context as MainActivity
 
     override fun render(viewState: SimpleViewState) {
         with(viewState) {

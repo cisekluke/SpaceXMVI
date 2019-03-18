@@ -6,25 +6,20 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 
 abstract class BaseMviFragment<A : BaseMviActivity<*, *>, V : BaseMviView<*, *>, in M : BaseViewModel<*, V, *>>(
-    private val modelClass: Class<M>,
-    private val activity: A
+    private val modelClass: Class<M>
 ) : Fragment() {
 
     private lateinit var viewModel: M
 
-     open lateinit var parent: A
+    private lateinit var context: A
 
     protected abstract fun view(): V
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
+    protected abstract fun setActivity(): A
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(parent).get(modelClass)
+        viewModel = ViewModelProviders.of(setActivity()).get(modelClass)
         initialize()
     }
 
