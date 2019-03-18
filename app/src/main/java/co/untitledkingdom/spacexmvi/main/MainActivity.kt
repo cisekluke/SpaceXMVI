@@ -13,6 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
 import kotlinx.android.synthetic.main.activity_main.errorTextView
 import kotlinx.android.synthetic.main.activity_main.fragmentButton
+import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
@@ -24,6 +25,7 @@ class MainActivity :
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()
+    private val defaultTag = "TAG"
 
     private val buttonSubject = PublishSubject.create<MainIntent>()
     private val clearSubject = PublishSubject.create<MainIntent>()
@@ -34,11 +36,13 @@ class MainActivity :
         setContentView(R.layout.activity_main)
 
         showMeRocketsButton.setOnClickListener {
-            buttonSubject.onNext(MainIntent.FetchRocketsState)
+            if (rocketsAdapter.itemCount == 0) buttonSubject.onNext(MainIntent.FetchRocketsState)
+            removeFragment()
         }
 
         clearButton.setOnClickListener {
             buttonSubject.onNext(MainIntent.ClearState)
+            removeFragment()
         }
 
         fragmentButton.setOnClickListener {
@@ -94,10 +98,21 @@ class MainActivity :
 
     private fun displayFragment(showFragment: Boolean) {
         if (showFragment) {
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.fragmentContainer, SimpleFragment(), "TAG")
-            fragmentTransaction.commit()
+            removeFragment()
+            fragmentContainer.visibility = View.VISIBLE
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, SimpleFragment(), defaultTag)
+                .commit()
             fragmentSubject.onNext(MainIntent.DisplayFragmentState(false))
+        }
+    }
+
+    private fun removeFragment() {
+        supportFragmentManager.findFragmentByTag(defaultTag)?.let {
+            fragmentContainer.visibility = View.GONE
+            supportFragmentManager.beginTransaction()
+                .remove(it)
+                .commit()
         }
     }
 }
