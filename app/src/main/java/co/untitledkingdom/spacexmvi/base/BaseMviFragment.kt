@@ -10,12 +10,10 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *>, V : BaseMviView<*, *>,
 
     private lateinit var viewModel: M
 
-    private lateinit var context: A
-
     protected abstract fun view(): V
 
-    protected open fun viewModelInitialize(storeInActivity: Boolean = false, context: A? = null) {
-        viewModel = if (storeInActivity && context != null) ViewModelProviders.of(context).get(modelClass)
+    protected open fun viewModelInitialize(activity: A? = null) {
+        viewModel = if (activity != null) ViewModelProviders.of(activity).get(modelClass)
         else ViewModelProviders.of(this).get(modelClass)
     }
 
