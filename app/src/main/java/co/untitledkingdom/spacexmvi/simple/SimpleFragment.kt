@@ -28,13 +28,14 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         button.setOnClickListener {
             buttonSubject.onNext(SimpleIntent.ShowOutputStage(input.text.toString()))
         }
     }
 
-    override fun setActivity(): MainActivity = context as MainActivity
+    override fun viewModelInitialize(storeInActivity: Boolean, context: MainActivity?) {
+        super.viewModelInitialize(true, activity as MainActivity)
+    }
 
     override fun render(viewState: SimpleViewState) {
         with(viewState) {

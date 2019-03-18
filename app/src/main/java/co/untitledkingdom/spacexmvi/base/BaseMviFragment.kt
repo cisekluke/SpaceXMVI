@@ -1,6 +1,5 @@
 package co.untitledkingdom.spacexmvi.base
 
-
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,11 +14,14 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *>, V : BaseMviView<*, *>,
 
     protected abstract fun view(): V
 
-    protected abstract fun setActivity(): A
+    protected open fun viewModelInitialize(storeInActivity: Boolean = false, context: A? = null) {
+        viewModel = if (storeInActivity && context != null) ViewModelProviders.of(context).get(modelClass)
+        else ViewModelProviders.of(this).get(modelClass)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(setActivity()).get(modelClass)
+        viewModelInitialize()
         initialize()
     }
 
