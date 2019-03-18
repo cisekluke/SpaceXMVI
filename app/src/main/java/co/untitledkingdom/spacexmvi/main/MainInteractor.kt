@@ -15,9 +15,9 @@ class MainInteractor {
             .map<MainAction> {
                 return@map if (emitError) {
                     emitError = false
-                    MainAction.ErrorState
+                    MainAction.DisplayError
                 } else
-                    MainAction.ListFetchedState(
+                    MainAction.ListFetched(
                         listOf(
                             Rocket(
                                 "Falcon 1",

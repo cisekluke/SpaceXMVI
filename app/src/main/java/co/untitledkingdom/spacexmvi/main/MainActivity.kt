@@ -1,7 +1,6 @@
 package co.untitledkingdom.spacexmvi.main
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import co.untitledkingdom.spacexmvi.R
@@ -13,19 +12,22 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
 import kotlinx.android.synthetic.main.activity_main.errorTextView
+import kotlinx.android.synthetic.main.activity_main.fragmentButton
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
     BaseMviActivity<MainView, MainViewModel>(
-        MainViewModel::class.java),
+        MainViewModel::class.java
+    ),
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()
 
     private val buttonSubject = PublishSubject.create<MainIntent>()
     private val clearSubject = PublishSubject.create<MainIntent>()
+    private val fragmentSubject = PublishSubject.create<MainIntent>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,10 @@ class MainActivity :
 
         clearButton.setOnClickListener {
             buttonSubject.onNext(MainIntent.ClearState)
+        }
+
+        fragmentButton.setOnClickListener {
+            fragmentSubject.onNext(MainIntent.DisplayFragmentState(true))
         }
 
         initRecyclerView()
@@ -53,7 +59,8 @@ class MainActivity :
 
     override fun getView(): MainView = this
 
-    override fun emitIntent(): Observable<MainIntent> = Observable.merge(buttonSubject, clearSubject)
+    override fun emitIntent(): Observable<MainIntent> =
+        Observable.merge(buttonSubject, clearSubject, fragmentSubject)
 
     private fun initRecyclerView() {
         rocketsRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -90,6 +97,7 @@ class MainActivity :
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.add(R.id.fragmentContainer, SimpleFragment(), "TAG")
             fragmentTransaction.commit()
+            fragmentSubject.onNext(MainIntent.DisplayFragmentState(false))
         }
     }
 }

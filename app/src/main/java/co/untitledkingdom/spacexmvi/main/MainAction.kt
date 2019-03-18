@@ -10,12 +10,12 @@ sealed class MainAction : BaseMviAction<MainViewState> {
             MainViewState(progress = true)
     }
 
-    object ErrorState : MainAction() {
+    object DisplayError : MainAction() {
         override fun reduce(previousState: MainViewState) =
             MainViewState(error = true)
     }
 
-    class ListFetchedState(private val rocketList: List<Rocket>) : MainAction() {
+    class ListFetched(private val rocketList: List<Rocket>) : MainAction() {
         override fun reduce(previousState: MainViewState) =
             MainViewState(rocketList = rocketList)
     }
@@ -23,6 +23,11 @@ sealed class MainAction : BaseMviAction<MainViewState> {
     object ClearStates : MainAction() {
         override fun reduce(previousState: MainViewState) =
             MainViewState()
+    }
+
+    data class DisplayFragment(private val displayFragment: Boolean = false) : MainAction() {
+        override fun reduce(previousState: MainViewState): MainViewState =
+            previousState.copy(displayFragment = displayFragment)
     }
 
     object Nothing : MainAction() {

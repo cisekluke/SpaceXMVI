@@ -16,6 +16,8 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
                 MainAction.ShowProgress
             )
             is MainIntent.ClearState -> just(MainAction.ClearStates)
+            MainIntent.DisplayFragmentState(true) -> just(MainAction.DisplayFragment(true))
+            MainIntent.DisplayFragmentState(false) -> just(MainAction.DisplayFragment(false))
             else -> just(MainAction.Nothing)
         }
 }

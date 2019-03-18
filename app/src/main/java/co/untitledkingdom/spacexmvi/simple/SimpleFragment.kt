@@ -1,5 +1,6 @@
 package co.untitledkingdom.spacexmvi.simple
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,15 +19,9 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
     MainActivity()
 ), SimpleView {
 
-    companion object {
-        fun newInstance(): SimpleFragment {
-            val playFragment = SimpleFragment()
-
-            return playFragment
-        }
-    }
 
     private val buttonSubject = PublishSubject.create<SimpleIntent>()
+    override lateinit var parent: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +30,17 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
         return inflater.inflate(R.layout.simple_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         button.setOnClickListener {
             buttonSubject.onNext(SimpleIntent.ShowOutputStage(input.text.toString()))
         }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        parent = context as MainActivity
     }
 
     override fun render(viewState: SimpleViewState) {
