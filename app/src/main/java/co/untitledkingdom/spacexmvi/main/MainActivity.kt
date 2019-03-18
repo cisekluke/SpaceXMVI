@@ -37,12 +37,14 @@ class MainActivity :
 
         showMeRocketsButton.setOnClickListener {
             if (rocketsAdapter.itemCount == 0) buttonSubject.onNext(MainIntent.FetchRocketsState)
+            fragmentContainer.visibility = View.GONE
             removeFragment()
         }
 
         clearButton.setOnClickListener {
             buttonSubject.onNext(MainIntent.ClearState)
             removeFragment()
+            clear()
         }
 
         fragmentButton.setOnClickListener {

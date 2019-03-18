@@ -33,6 +33,10 @@ abstract class BaseMviActivity<V : BaseMviView<*, *>, in M : BaseViewModel<*, V,
         super.onDestroy()
     }
 
+    open fun clear() {
+        viewModelStore.clear()
+    }
+
     private fun initialize() {
         viewModel.attachView(getView())
     }
