@@ -12,8 +12,8 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *>, V : BaseMviView<*, *>,
 
     protected abstract fun view(): V
 
-    protected open fun viewModelInitialize(activity: A? = null) {
-        viewModel = if (activity != null) ViewModelProviders.of(activity).get(modelClass)
+    protected open fun viewModelInitialize(fragmentActivity: A? = null) {
+        viewModel = if (fragmentActivity != null) ViewModelProviders.of(fragmentActivity).get(modelClass)
         else ViewModelProviders.of(this).get(modelClass)
     }
 

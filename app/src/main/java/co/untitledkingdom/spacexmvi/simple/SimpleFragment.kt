@@ -33,7 +33,7 @@ class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel
         }
     }
 
-    override fun viewModelInitialize(activity: MainActivity?) {
+    override fun viewModelInitialize(fragmentActivity: MainActivity?) {
         super.viewModelInitialize(activity as MainActivity)
     }
 
