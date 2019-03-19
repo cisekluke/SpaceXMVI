@@ -1,14 +1,12 @@
 package co.untitledkingdom.spacexmvi.base
 
-import android.arch.lifecycle.ViewModel
 import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 
-abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseMviPartialState<S>> :
-    ViewModel() {
+abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : BaseMviPartialState<S>> {
 
     private lateinit var view: V
 
@@ -39,7 +37,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
     protected fun render(intents: Observable<P>, defaultViewState: S) {
         if (!initialized) {
             intents.scan(getViewState(defaultViewState), this::reduce)
-               .subscribe(stateSubject)
+                .subscribe(stateSubject)
             initialized = true
         }
         renderStates()

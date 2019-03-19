@@ -3,7 +3,7 @@ package co.untitledkingdom.spacexmvi
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class MainViewRobot(mainViewModel: MainViewModel) : BaseMviViewRobot<MainView, MainViewModel, MainViewState>(mainViewModel) {
+class MainViewRobot(mainViewModel: MainMviPresenter) : BaseMviViewRobot<MainView, MainMviPresenter, MainViewState>(mainViewModel) {
 
     private val buttonClickSubject = PublishSubject.create<Boolean>()
     private val clearClickSubject = PublishSubject.create<Boolean>()

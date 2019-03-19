@@ -23,7 +23,7 @@ class MainViewModgelTest {
                 Observable.just(PartialMainViewState.ListFetchedState(fetchedRocketList))
         )
 
-        val mainViewModel = MainViewModel(mainInteractor)
+        val mainViewModel = MainMviPresenter(mainInteractor)
         val mainViewRobot = MainViewRobot(mainViewModel)
 
         mainViewRobot.startView()
@@ -45,7 +45,7 @@ class MainViewModgelTest {
                 Observable.just(PartialMainViewState.ErrorState)
         )
 
-        val mainViewModel = MainViewModel(mainInteractor)
+        val mainViewModel = MainMviPresenter(mainInteractor)
         val mainViewRobot = MainViewRobot(mainViewModel)
 
         mainViewRobot.startView()
@@ -71,7 +71,7 @@ class MainViewModgelTest {
         )
 
         /** initialize fromView model */
-        val mainViewModel = MainViewModel(mainInteractor)
+        val mainViewModel = MainMviPresenter(mainInteractor)
 
         /** initialize fromView robot using fromView model just created */
         val mainViewRobot = MainViewRobot(mainViewModel)

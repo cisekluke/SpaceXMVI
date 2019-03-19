@@ -2,10 +2,10 @@ package co.untitledkingdom.spacexmvi
 
 import co.untitledkingdom.spacexmvi.base.BaseMviView
 import co.untitledkingdom.spacexmvi.base.BaseMviViewState
-import co.untitledkingdom.spacexmvi.base.BaseViewModel
+import co.untitledkingdom.spacexmvi.base.BaseMviPresenter
 import junit.framework.Assert
 
-abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseViewModel<*, V, *>, S : BaseMviViewState>(
+abstract class BaseMviViewRobot<V : BaseMviView<*>, out M : BaseMviPresenter<*, V, *>, S : BaseMviViewState>(
     private val viewModel: M
 ) {
 

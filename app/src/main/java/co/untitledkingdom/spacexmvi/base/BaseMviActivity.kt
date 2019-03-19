@@ -1,39 +1,40 @@
 package co.untitledkingdom.spacexmvi.base
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-abstract class BaseMviActivity<V : BaseMviView<*>, in M : BaseViewModel<*, V, *>>(
-    private val modelClass: Class<M>
+abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>>(
+
 ) : AppCompatActivity() {
 
-    private lateinit var viewModel: M
+    private lateinit var presenter: P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(modelClass)
+        presenter = getPresenter()
         initialize()
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.bind()
+        presenter.bind()
     }
 
     override fun onStop() {
-        viewModel.unbind()
+        presenter.unbind()
         super.onStop()
     }
 
     override fun onDestroy() {
-        viewModel.deinitialize()
+        presenter.deinitialize()
         super.onDestroy()
     }
 
     abstract fun getView(): V
 
+    abstract fun getPresenter(): P
+
     private fun initialize() {
-        viewModel.attachView(getView())
+        presenter.attachView(getView())
     }
 }

@@ -1,9 +1,9 @@
 package co.untitledkingdom.spacexmvi
 
-import co.untitledkingdom.spacexmvi.base.BaseViewModel
+import co.untitledkingdom.spacexmvi.base.BaseMviPresenter
 
-class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor()) :
-    BaseViewModel<MainViewState, MainView, PartialMainViewState>() {
+class MainMviPresenter(private val mainInteractor: MainInteractor = MainInteractor()) :
+    BaseMviPresenter<MainViewState, MainView, PartialMainViewState>() {
 
     override fun bind() {
         val buttonClickObservable =
