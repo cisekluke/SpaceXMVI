@@ -8,4 +8,4 @@ Sample project on which we build and test different architecture approaches. Mos
  - mviPresenter - standard MVI architecture with `Presenter`, not using `ViewModel`
  - mviWithActions - new approach(something like MVVMI), with `ViewModel` as presentation layer, including some new features for our architecture as for example `Action`, `Intent` 
 
-**NOTE:** branch "mviWithActions" is the most ahead
+**NOTE:** branch "mviWithActions" is the most ahead and "master" is not being used
