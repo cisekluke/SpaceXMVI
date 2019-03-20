@@ -66,7 +66,7 @@ class MainActivity :
     override fun getView(): MainView = this
 
     override fun emitIntent(): Observable<MainIntent> =
-        Observable.merge(buttonSubject, clearSubject)
+        Observable.merge(buttonSubject, clearSubject, fragmentSubject)
 
 //    override fun emitNavigationIntent(): Observable<MainIntent>  = fragmentSubject
 
