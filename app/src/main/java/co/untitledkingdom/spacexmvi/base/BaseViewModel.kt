@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
@@ -20,7 +21,10 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
+    protected open fun <I : BaseMviIntent> intentToNavigation(intent: I) {}
+
     internal fun bind() {
+        if (!subscribed) navigation()
         saveState(mapIntents())
     }
 
@@ -37,7 +41,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         subscribed = false
     }
 
-    protected fun just(intent: A): Observable<A> = Observable.just(intent)
+    protected fun just(action: A): Observable<A> = Observable.just(action)
 
     private fun saveState(intents: Observable<A>) {
         if (!subscribed) {
@@ -52,8 +56,8 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         renderStates()
     }
 
-    open fun navigation() {
-        // override with custom code
+    private fun navigation() {
+        compositeDisposable.add(view.emitNavigationIntent().subscribe { intentToNavigation(it) })
     }
 
     @MainThread

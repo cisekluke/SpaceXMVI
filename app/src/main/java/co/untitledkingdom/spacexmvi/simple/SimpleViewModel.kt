@@ -15,4 +15,6 @@ class SimpleViewModel : BaseViewModel<SimpleViewState, SimpleView, SimpleAction>
             else -> just(SimpleAction.Nothing)
         }
     }
+
+
 }

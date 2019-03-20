@@ -66,7 +66,9 @@ class MainActivity :
     override fun getView(): MainView = this
 
     override fun emitIntent(): Observable<MainIntent> =
-        Observable.merge(buttonSubject, clearSubject, fragmentSubject)
+        Observable.merge(buttonSubject, clearSubject)
+
+//    override fun emitNavigationIntent(): Observable<MainIntent>  = fragmentSubject
 
     private fun initRecyclerView() {
         rocketsRecyclerView.layoutManager = LinearLayoutManager(this)
