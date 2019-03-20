@@ -52,6 +52,10 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         renderStates()
     }
 
+    open fun navigation() {
+        // override with custom code
+    }
+
     @MainThread
     private fun renderStates() {
         compositeDisposable.add(
