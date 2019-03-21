@@ -18,7 +18,11 @@ class MainMviPresenter(private val mainInteractor: MainInteractor = MainInteract
                     PartialMainViewState.ClearPreviousStates
                 }
 
-        val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable)
+        val fragmentButtonObservable =
+            view().emitFragmentClick()
+                .map<PartialMainViewState> { PartialMainViewState.OpenFragmentState(it) }
+
+        val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable, fragmentButtonObservable)
 
         render(intents = mergedIntentsObservable, defaultViewState = MainViewState())
     }

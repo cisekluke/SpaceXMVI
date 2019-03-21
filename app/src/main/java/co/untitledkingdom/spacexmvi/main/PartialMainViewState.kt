@@ -28,4 +28,9 @@ sealed class PartialMainViewState : BaseMviPartialState<MainViewState> {
         override fun reduce(previousState: MainViewState) =
             MainViewState()
     }
+
+    class OpenFragmentState(private val display: Boolean) : PartialMainViewState() {
+        override fun reduce(previousState: MainViewState): MainViewState =
+            MainViewState(displayFragment = display)
+    }
 }

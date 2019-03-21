@@ -7,10 +7,13 @@ import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
+import co.untitledkingdom.spacexmvi.simple.SimpleFragment
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_main.clearButton
 import kotlinx.android.synthetic.main.activity_main.errorTextView
+import kotlinx.android.synthetic.main.activity_main.fragmentButton
+import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
@@ -23,6 +26,8 @@ class MainActivity :
 
     private val buttonSubject = PublishSubject.create<Boolean>()
     private val clearSubject = PublishSubject.create<Boolean>()
+    private val fragmentSubject = PublishSubject.create<Boolean>()
+    private val defaultTag = "TAG"
 
     private var presenter: MainMviPresenter =
         MainMviPresenter()
@@ -32,11 +37,18 @@ class MainActivity :
         setContentView(R.layout.activity_main)
 
         showMeRocketsButton.setOnClickListener {
-            buttonSubject.onNext(true)
+            fragmentContainer.visibility = View.GONE
+            removeFragment()
+            if (rocketsAdapter.itemCount == 0) buttonSubject.onNext(true)
         }
 
         clearButton.setOnClickListener {
             clearSubject.onNext(true)
+            removeFragment()
+        }
+
+        fragmentButton.setOnClickListener {
+            fragmentSubject.onNext(true)
         }
 
         initRecyclerView()
@@ -77,6 +89,7 @@ class MainActivity :
             showProgressBar(progress)
             showError(error)
             showRocketList(rocketList)
+            displayFragment(displayFragment)
         }
     }
 
@@ -87,4 +100,26 @@ class MainActivity :
     override fun emitButtonClick(): Observable<Boolean> = buttonSubject
 
     override fun emitClearButton(): Observable<Boolean> = clearSubject
+
+    override fun emitFragmentClick(): Observable<Boolean> = fragmentSubject
+
+    private fun displayFragment(showFragment: Boolean) {
+        if (showFragment) {
+            removeFragment()
+            fragmentContainer.visibility = View.VISIBLE
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, SimpleFragment(), defaultTag)
+                .commit()
+            fragmentSubject.onNext(false)
+        }
+    }
+
+    private fun removeFragment() {
+        supportFragmentManager.findFragmentByTag(defaultTag)?.let {
+            fragmentContainer.visibility = View.GONE
+            supportFragmentManager.beginTransaction()
+                .remove(it)
+                .commit()
+        }
+    }
 }

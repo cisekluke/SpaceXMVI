@@ -8,4 +8,5 @@ interface MainView : BaseMviView<MainViewState> {
     fun emitButtonClick(): Observable<Boolean>
 
     fun emitClearButton(): Observable<Boolean>
+    fun emitFragmentClick(): Observable<Boolean>
 }
