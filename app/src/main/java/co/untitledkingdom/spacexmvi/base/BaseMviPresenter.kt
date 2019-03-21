@@ -13,7 +13,6 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private var initialized = false
-    private lateinit var myLastState: S
 
     abstract fun bind()
 
@@ -37,7 +36,6 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
 
     protected fun render(intents: Observable<P>, defaultViewState: S) {
         if (!initialized) {
-            myLastState = defaultViewState
             intents.scan(getViewState(defaultViewState), this::reduce)
                 .subscribe(stateSubject)
             initialized = true
@@ -50,11 +48,10 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
         compositeDisposable.add(
             stateSubject.distinctUntilChanged()
                 .subscribe { state ->
-                    myLastState = state
                     view.render(state) })
     }
 
-    private fun getViewState(defaultViewState: S) = stateSubject.value ?: myLastState
+    private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
 
     private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
 }
