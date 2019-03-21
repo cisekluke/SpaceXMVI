@@ -23,7 +23,7 @@ class MainActivity :
     private val buttonSubject = PublishSubject.create<Boolean>()
     private val clearSubject = PublishSubject.create<Boolean>()
 
-    private val presenter = MainMviPresenter()
+    private var presenter: MainMviPresenter = MainMviPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
