@@ -1,8 +1,9 @@
-package co.untitledkingdom.spacexmvi
+package co.untitledkingdom.spacexmvi.main
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
@@ -23,7 +24,8 @@ class MainActivity :
     private val buttonSubject = PublishSubject.create<Boolean>()
     private val clearSubject = PublishSubject.create<Boolean>()
 
-    private var presenter: MainMviPresenter = MainMviPresenter()
+    private var presenter: MainMviPresenter =
+        MainMviPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
