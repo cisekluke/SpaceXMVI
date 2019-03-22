@@ -1,5 +1,6 @@
 package co.untitledkingdom.spacexmvi.base
 
+import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
 import io.reactivex.Observable
@@ -41,6 +42,14 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
             initialized = true
         }
         renderStates()
+    }
+
+    fun saveLastViewState(outState: Bundle) {
+        outState.putParcelable("key", stateSubject.value)
+    }
+
+    fun initState(viewState: S) {
+        stateSubject.onNext(viewState)
     }
 
     @MainThread

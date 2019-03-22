@@ -1,3 +1,6 @@
 package co.untitledkingdom.spacexmvi.base
 
-interface BaseMviViewState
+import android.os.Parcelable
+import java.io.Serializable
+
+interface BaseMviViewState: Parcelable

@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-    BaseMviActivity<MainView, MainMviPresenter>(),
+    BaseMviActivity<MainViewState, MainView, MainMviPresenter>(),
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()
