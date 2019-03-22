@@ -42,18 +42,19 @@ abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
         presenter.attachView(getView())
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun attachPresenter() {
         var retainedFragment = supportFragmentManager.findFragmentByTag(retainedTag)
 
         if (retainedFragment == null) {
-            retainedFragment = BaseRetainedFragment<V, P>()
+            retainedFragment = BaseRetainedFragment<P>()
             supportFragmentManager.beginTransaction()
                 .add(retainedFragment, retainedTag).commit()
 
             presenter = getPresenter()
             retainedFragment.setPresenter(presenter)
         } else {
-            presenter = (retainedFragment as BaseRetainedFragment<V, P>).getPresenter()
+            presenter = (retainedFragment as BaseRetainedFragment<P>).getPresenter()
         }
     }
 }
