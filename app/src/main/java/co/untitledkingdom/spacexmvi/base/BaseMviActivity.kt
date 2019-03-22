@@ -10,7 +10,8 @@ abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        attachPresenter()
+//        attachPresenter()
+        presenter = getPresenter()
         initialize()
     }
 
