@@ -7,11 +7,11 @@ abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
     AppCompatActivity() {
 
     private lateinit var presenter: P
+    private val retainedTag = "HOLDER"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        attachPresenter()
-        presenter = getPresenter()
+        attachPresenter()
         initialize()
     }
 
@@ -43,8 +43,17 @@ abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
     }
 
     private fun attachPresenter() {
-        presenter =
-            if (lastCustomNonConfigurationInstance != null) lastCustomNonConfigurationInstance as P
-            else getPresenter()
+        var retainedFragment = supportFragmentManager.findFragmentByTag(retainedTag)
+
+        if (retainedFragment == null) {
+            retainedFragment = BaseRetainedFragment<V, P>()
+            supportFragmentManager.beginTransaction()
+                .add(retainedFragment, retainedTag).commit()
+
+            presenter = getPresenter()
+            retainedFragment.setPresenter(presenter)
+        } else {
+            presenter = (retainedFragment as BaseRetainedFragment<V, P>).getPresenter()
+        }
     }
 }

@@ -1,20 +1,20 @@
-package co.untitledkingdom.spacexmvi.main
+package co.untitledkingdom.spacexmvi.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
-class ReatinedFragment : Fragment() {
+class BaseRetainedFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>> : Fragment() {
 
-     lateinit var presenter: MainMviPresenter
+    private lateinit var presenter: P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
 
-    fun setPres(presenter: MainMviPresenter) {
+    fun setPresenter(presenter: P) {
         this.presenter = presenter
     }
 
-    fun getPres() = presenter
+    fun getPresenter() = presenter
 }

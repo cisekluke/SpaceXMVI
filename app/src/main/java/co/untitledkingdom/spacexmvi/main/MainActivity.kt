@@ -28,7 +28,6 @@ class MainActivity :
     private val clearSubject = PublishSubject.create<Boolean>()
     private val fragmentSubject = PublishSubject.create<Boolean>()
     private val defaultTag = "TAG"
-    private val defaultTagg = "TAG2"
 
     private var presenter: MainMviPresenter =
         MainMviPresenter()
@@ -96,20 +95,7 @@ class MainActivity :
 
     override fun getView(): MainView = this
 
-    override fun getPresenter(): MainMviPresenter {
-        var worker = supportFragmentManager.findFragmentByTag(defaultTagg)
-
-        return if (worker == null) {
-            worker = ReatinedFragment()
-            supportFragmentManager.beginTransaction()
-                .add(worker, defaultTagg).commit()
-
-            worker.setPres(presenter)
-            presenter
-        } else {
-            (supportFragmentManager.findFragmentByTag(defaultTagg) as ReatinedFragment).getPres()
-        }
-    }
+    override fun getPresenter(): MainMviPresenter = presenter
 
     override fun emitButtonClick(): Observable<Boolean> = buttonSubject
 
