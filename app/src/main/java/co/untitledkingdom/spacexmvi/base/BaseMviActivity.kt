@@ -30,10 +30,6 @@ abstract class BaseMviActivity<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
         super.onDestroy()
     }
 
-    override fun onRetainCustomNonConfigurationInstance(): P {
-        return presenter
-    }
-
     abstract fun getView(): V
 
     abstract fun getPresenter(): P

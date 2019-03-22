@@ -110,7 +110,7 @@ class MainActivity :
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, SimpleFragment(), defaultTag)
                 .commit()
-            //            fragmentSubject.onNext(false)
+            fragmentSubject.onNext(false)
         }
     }
 

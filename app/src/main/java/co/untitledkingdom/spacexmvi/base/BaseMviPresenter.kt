@@ -10,7 +10,7 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
 
     private lateinit var view: V
 
-    private val compositeDisposable = CompositeDisposable()
+    private val disposables = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private var initialized = false
 
@@ -22,7 +22,7 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
 
     @CallSuper
     internal open fun unbind() {
-        compositeDisposable.clear()
+        disposables.clear()
     }
 
     internal fun deinitialize() {
@@ -45,10 +45,11 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
 
     @MainThread
     private fun renderStates() {
-        compositeDisposable.add(
+        disposables.add(
             stateSubject.distinctUntilChanged()
                 .subscribe { state ->
-                    view.render(state) })
+                    view.render(state)
+                })
     }
 
     private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
