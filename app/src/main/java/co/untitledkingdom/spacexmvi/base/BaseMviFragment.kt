@@ -7,10 +7,11 @@ abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
     Fragment() {
 
     private lateinit var presenter: P
+    private val retainedTag = "FRAGMENT_HOLDER"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        presenter = getPresenter()
+        attachPresenter()
         initialize()
     }
 
@@ -28,10 +29,6 @@ abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
         presenter.deinitialize()
         super.onDestroy()
     }
-//
-//    override fun onRetainCustomNonConfigurationInstance(): P {
-//        return presenter
-//    }
 
     abstract fun view(): V
 
@@ -41,9 +38,19 @@ abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
         presenter.attachView(view())
     }
 
-//    private fun attachPresenter() {
-//        presenter =
-//            if (lastCustomNonConfigurationInstance != null) lastCustomNonConfigurationInstance as P
-//            else getPresenter()
-//    }
+    @Suppress("UNCHECKED_CAST")
+    private fun attachPresenter() {
+        var retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
+
+        if (retainedFragment == null) {
+            retainedFragment = BaseRetainedFragment<P>()
+            activity?.supportFragmentManager?.beginTransaction()?.add(retainedFragment, retainedTag)
+                ?.commit()
+
+            presenter = getPresenter()
+            retainedFragment.setPresenter(presenter)
+        } else {
+            presenter = (retainedFragment as BaseRetainedFragment<P>).getPresenter()
+        }
+    }
 }
