@@ -7,14 +7,13 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 
-abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : BaseMviPartialState<S>> {
+abstract class BaseMviPresenter<VS : BaseMviViewState, V : BaseMviView<VS>, P : BaseMviPartialState<VS>> {
 
     private lateinit var view: V
 
     private val disposables = CompositeDisposable()
-    private val stateSubject = BehaviorSubject.create<S>()
+    private val stateSubject = BehaviorSubject.create<VS>()
     private var initialized = false
-    abstract val defaultViewState: S
 
     abstract fun bind()
 
@@ -36,9 +35,9 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
     protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
         Observable.merge(states.asIterable())
 
-    protected fun render(intents: Observable<P>) {
+    protected fun render(intents: Observable<P>, defaultViewState: VS) {
         if (!initialized) {
-            intents.scan(getViewState(), this::reduce)
+            intents.scan(getViewState(defaultViewState), this::reduce)
                 .subscribe(stateSubject)
             initialized = true
         }
@@ -49,8 +48,8 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
         outState.putParcelable(key, stateSubject.value)
     }
 
-    fun initState(viewState: S?) {
-        stateSubject.onNext(viewState ?: defaultViewState)
+    fun initState(viewState: VS) {
+        stateSubject.onNext(viewState)
     }
 
     @MainThread
@@ -62,7 +61,7 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
                 })
     }
 
-    private fun getViewState() = stateSubject.value ?: defaultViewState
+    private fun getViewState(defaultViewState: VS) = stateSubject.value ?: defaultViewState
 
-    private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
+    private fun reduce(previousState: VS, partialState: P): VS = partialState.reduce(previousState)
 }

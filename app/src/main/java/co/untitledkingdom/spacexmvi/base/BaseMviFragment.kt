@@ -2,7 +2,6 @@ package co.untitledkingdom.spacexmvi.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 
 abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : BaseMviPresenter<VS, V, *>> :
     Fragment() {
@@ -13,11 +12,13 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        attachPresenter()
+        //        attachPresenter()
         presenter = getPresenter()
-        if (savedInstanceState?.getParcelable<VS>(key) != null) {
-            presenter.initState(savedInstanceState.getParcelable(key))
+
+        savedInstanceState?.let { savedInstance ->
+            presenter.initState(savedInstance.getParcelable(key))
         }
+
         initialize()
     }
 
