@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_simple.button
 import kotlinx.android.synthetic.main.fragment_simple.input
 import kotlinx.android.synthetic.main.fragment_simple.text
 
-class SimpleFragment : BaseMviFragment<SimpleView, SimplePresenter>(), SimpleView {
+class SimpleFragment : BaseMviFragment<SimpleViewState, SimpleView, SimplePresenter>(), SimpleView {
     override fun getPresenter(): SimplePresenter = SimplePresenter()
 
     override fun view(): SimpleView = this

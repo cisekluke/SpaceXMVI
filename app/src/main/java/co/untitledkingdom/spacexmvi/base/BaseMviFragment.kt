@@ -2,8 +2,9 @@ package co.untitledkingdom.spacexmvi.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 
-abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>> :
+abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : BaseMviPresenter<VS, V, *>> :
     Fragment() {
 
     private lateinit var presenter: P
@@ -11,7 +12,12 @@ abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        attachPresenter()
+//        attachPresenter()
+        presenter = getPresenter()
+        if (savedInstanceState?.getParcelable<VS>("key") != null) {
+            Log.d("xDD", "xddd: ${savedInstanceState.getParcelable<VS>("key")}")
+            presenter.initState(savedInstanceState.getParcelable("key"))
+        }
         initialize()
     }
 
@@ -28,6 +34,11 @@ abstract class BaseMviFragment<V : BaseMviView<*>, P : BaseMviPresenter<*, V, *>
     override fun onDestroy() {
         presenter.deinitialize()
         super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        presenter.saveLastViewState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     abstract fun view(): V

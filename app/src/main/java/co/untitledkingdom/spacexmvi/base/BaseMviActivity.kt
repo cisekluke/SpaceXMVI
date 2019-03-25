@@ -12,11 +12,11 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        attachPresenter()
+        //        attachPresenter()
         presenter = getPresenter()
         if (savedInstanceState?.getParcelable<VS>("key") != null) {
             Log.d("xDD", "xddd: ${savedInstanceState.getParcelable<VS>("key")}")
-            presenter.initState(savedInstanceState.getParcelable<VS>("key"))
+            presenter.initState(savedInstanceState.getParcelable("key"))
         }
         initialize()
     }
