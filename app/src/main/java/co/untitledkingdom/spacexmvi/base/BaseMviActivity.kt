@@ -2,6 +2,7 @@ package co.untitledkingdom.spacexmvi.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : BaseMviPresenter<VS, V, *>> :
     AppCompatActivity() {
@@ -12,12 +13,12 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //        attachPresenter()
+                attachPresenter()
         presenter = getPresenter()
 
-        savedInstanceState?.let { savedInstance ->
-            presenter.initState(savedInstance.getParcelable(key))
-        }
+//        savedInstanceState?.let { savedInstance ->
+//            presenter.initState(savedInstance.getParcelable(key))
+//        }
 
         initialize()
     }
@@ -37,12 +38,12 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         super.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.let { lastInstance ->
-            presenter.saveLastViewState(key, lastInstance)
-        }
-        super.onSaveInstanceState(outState)
-    }
+//    override fun onSaveInstanceState(outState: Bundle?) {
+//        outState?.let { lastInstance ->
+//            presenter.saveLastViewState(key, lastInstance)
+//        }
+//        super.onSaveInstanceState(outState)
+//    }
 
     abstract fun getView(): V
 
@@ -57,14 +58,17 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         var retainedFragment = supportFragmentManager.findFragmentByTag(retainedTag)
 
         if (retainedFragment == null) {
-            retainedFragment = BaseRetainedFragment<P>()
+            retainedFragment = BaseRetainedFragment<VS, P>()
             supportFragmentManager.beginTransaction()
                 .add(retainedFragment, retainedTag).commit()
 
             presenter = getPresenter()
             retainedFragment.setPresenter(presenter)
         } else {
-            presenter = (retainedFragment as BaseRetainedFragment<P>).getPresenter()
+            presenter = (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
+            Log.d("xDD", "presenter before: $presenter")
+            retainedFragment.setPresenter(presenter)
+            retainedFragment.getInfoFromBundle()
         }
     }
 }

@@ -55,14 +55,16 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         var retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
 
         if (retainedFragment == null) {
-            retainedFragment = BaseRetainedFragment<P>()
+            retainedFragment = BaseRetainedFragment<VS, P>()
             activity?.supportFragmentManager?.beginTransaction()?.add(retainedFragment, retainedTag)
                 ?.commit()
 
             presenter = getPresenter()
             retainedFragment.setPresenter(presenter)
         } else {
-            presenter = (retainedFragment as BaseRetainedFragment<P>).getPresenter()
+            presenter = (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
+            retainedFragment.setPresenter(presenter)
+            retainedFragment.getInfoFromBundle()
         }
     }
 }
