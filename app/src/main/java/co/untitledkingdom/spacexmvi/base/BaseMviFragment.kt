@@ -9,14 +9,14 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     private lateinit var presenter: P
     private val retainedTag = "FRAGMENT_HOLDER"
+    private val key = "FRAGMENT_BUNDLE"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 //        attachPresenter()
         presenter = getPresenter()
-        if (savedInstanceState?.getParcelable<VS>("key") != null) {
-            Log.d("xDD", "xddd: ${savedInstanceState.getParcelable<VS>("key")}")
-            presenter.initState(savedInstanceState.getParcelable("key"))
+        if (savedInstanceState?.getParcelable<VS>(key) != null) {
+            presenter.initState(savedInstanceState.getParcelable(key))
         }
         initialize()
     }
@@ -37,7 +37,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        presenter.saveLastViewState(outState)
+        presenter.saveLastViewState(key, outState)
         super.onSaveInstanceState(outState)
     }
 

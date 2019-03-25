@@ -44,8 +44,8 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
         renderStates()
     }
 
-    fun saveLastViewState(outState: Bundle) {
-        outState.putParcelable("key", stateSubject.value)
+    fun saveLastViewState(key: String, outState: Bundle) {
+        outState.putParcelable(key, stateSubject.value)
     }
 
     fun initState(viewState: S) {
