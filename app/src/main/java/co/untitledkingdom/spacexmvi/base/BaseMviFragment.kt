@@ -12,12 +12,8 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        //        attachPresenter()
+                attachPresenter()
         presenter = getPresenter()
-
-        savedInstanceState?.let { savedInstance ->
-            presenter.initState(savedInstance.getParcelable(key))
-        }
 
         initialize()
     }
@@ -37,11 +33,6 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         super.onDestroy()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        presenter.saveLastViewState(key, outState)
-        super.onSaveInstanceState(outState)
-    }
-
     abstract fun view(): V
 
     abstract fun getPresenter(): P
@@ -50,6 +41,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         presenter.attachView(view())
     }
 
+    // TODO change presenter get from bundle to retained fragment
     @Suppress("UNCHECKED_CAST")
     private fun attachPresenter() {
         var retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
