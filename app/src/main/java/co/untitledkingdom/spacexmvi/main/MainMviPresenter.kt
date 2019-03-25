@@ -5,6 +5,9 @@ import co.untitledkingdom.spacexmvi.base.BaseMviPresenter
 class MainMviPresenter(private val mainInteractor: MainInteractor = MainInteractor()) :
     BaseMviPresenter<MainViewState, MainView, PartialMainViewState>() {
 
+    override val defaultViewState: MainViewState
+        get() = MainViewState()
+
     override fun bind() {
         val buttonClickObservable =
             view().emitButtonClick()
@@ -24,6 +27,6 @@ class MainMviPresenter(private val mainInteractor: MainInteractor = MainInteract
 
         val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable, fragmentButtonObservable)
 
-        render(intents = mergedIntentsObservable, defaultViewState = MainViewState())
+        render(intents = mergedIntentsObservable)
     }
 }

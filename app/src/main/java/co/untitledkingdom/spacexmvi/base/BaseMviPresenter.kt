@@ -14,6 +14,7 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
     private val disposables = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private var initialized = false
+    abstract val defaultViewState: S
 
     abstract fun bind()
 
@@ -35,9 +36,9 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
     protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
         Observable.merge(states.asIterable())
 
-    protected fun render(intents: Observable<P>, defaultViewState: S) {
+    protected fun render(intents: Observable<P>) {
         if (!initialized) {
-            intents.scan(getViewState(defaultViewState), this::reduce)
+            intents.scan(getViewState(), this::reduce)
                 .subscribe(stateSubject)
             initialized = true
         }
@@ -48,8 +49,8 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
         outState.putParcelable(key, stateSubject.value)
     }
 
-    fun initState(viewState: S) {
-        stateSubject.onNext(viewState)
+    fun initState(viewState: S?) {
+        stateSubject.onNext(viewState ?: defaultViewState)
     }
 
     @MainThread
@@ -61,7 +62,7 @@ abstract class BaseMviPresenter<S : BaseMviViewState, V : BaseMviView<S>, P : Ba
                 })
     }
 
-    private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
+    private fun getViewState() = stateSubject.value ?: defaultViewState
 
     private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
 }
