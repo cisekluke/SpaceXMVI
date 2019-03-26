@@ -2,6 +2,7 @@ package co.untitledkingdom.spacexmvi.main
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.text.method.TextKeyListener.clear
 import android.view.View
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-    BaseMviActivity<MainView, MainViewModel>(
+    BaseMviActivity<MainViewState, MainView, MainViewModel>(
         MainViewModel::class.java
     ),
     MainView {

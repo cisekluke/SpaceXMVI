@@ -3,6 +3,7 @@ package co.untitledkingdom.spacexmvi.base
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
+import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -15,6 +16,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
+    var isInitialized = false
     private var subscribed = false
 
     protected abstract val defaultViewState: S
@@ -35,6 +37,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     internal fun attachView(view: V) {
         this.view = view
+        isInitialized = true
     }
 
     internal fun unsubscribe() {
@@ -64,14 +67,20 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     private fun renderStates() {
         compositeDisposable.add(
             stateSubject.distinctUntilChanged()
-                .subscribe { state -> view.render(state) }
+                .subscribe { state ->
+                    Log.d("xDDD", "state: $state")
+                    view.render(state) }
         )
     }
 
     private fun mapIntents(): Observable<A> = view.emitIntent()
         .flatMap { intentToAction(it) }
 
-    private fun getViewState(): S = stateSubject.value ?: defaultViewState
+    fun getViewState(): S = stateSubject.value ?: defaultViewState
+
+    fun setInitialViewState(viewState: S) {
+        stateSubject.onNext(viewState)
+    }
 
     private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
 }
