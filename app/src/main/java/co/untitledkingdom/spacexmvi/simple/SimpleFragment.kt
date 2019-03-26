@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.simple_fragment.button
 import kotlinx.android.synthetic.main.simple_fragment.input
 import kotlinx.android.synthetic.main.simple_fragment.text
 
-class SimpleFragment : BaseMviFragment<MainActivity, SimpleView, SimpleViewModel>(
+class SimpleFragment : BaseMviFragment<SimpleViewState, MainActivity, SimpleView, SimpleViewModel>(
     SimpleViewModel::class.java
 ), SimpleView {
 

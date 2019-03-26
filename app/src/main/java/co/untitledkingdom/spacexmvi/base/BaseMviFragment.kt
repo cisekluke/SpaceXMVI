@@ -4,11 +4,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
-abstract class BaseMviFragment<A : BaseMviActivity<*, *, *>, V : BaseMviView<*, *>, in M : BaseViewModel<*, V, *>>(
+abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, *>, V : BaseMviView<VS, *>, in M : BaseViewModel<VS, V, *>>(
     private val modelClass: Class<M>
 ) : Fragment() {
 
     private lateinit var viewModel: M
+    private val key = "FRAGMENT_BUNDLE"
 
     protected abstract fun view(): V
 
@@ -21,6 +22,11 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *, *>, V : BaseMviView<*, 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModelInitialize()
+
+        if (!viewModel.isInitialized && savedInstanceState != null) viewModel.setInitialViewState(
+            savedInstanceState.getParcelable(key)
+        )
+
         initialize()
     }
 
@@ -37,6 +43,11 @@ abstract class BaseMviFragment<A : BaseMviActivity<*, *, *>, V : BaseMviView<*, 
     override fun onDestroy() {
         viewModel.unsubscribe()
         super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(key, viewModel.getViewState())
+        super.onSaveInstanceState(outState)
     }
 
     private fun initialize() {

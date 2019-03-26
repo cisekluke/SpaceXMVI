@@ -9,15 +9,17 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, in
 ) : AppCompatActivity() {
 
     private lateinit var viewModel: M
-    private val key = "activity"
+    private val key = "ACTIVITY_BUNDLE"
 
     protected abstract fun getView(): V
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(modelClass)
+
         if (!viewModel.isInitialized && savedInstanceState != null) viewModel.setInitialViewState(
             savedInstanceState.getParcelable(key)
+
         )
         initialize()
     }
