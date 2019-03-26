@@ -29,9 +29,8 @@ class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>
         }
     }
 
-    fun setPresenter(presenter: P, key :String) {
+    fun setPresenter(presenter: P) {
         this.presenter = presenter
-        this.key = key
     }
 
     fun getPresenter() = presenter

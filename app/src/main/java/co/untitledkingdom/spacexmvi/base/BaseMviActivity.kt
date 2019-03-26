@@ -8,7 +8,6 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     private lateinit var presenter: P
     private val retainedTag = "HOLDER"
-    private val key = "ACTIVITY_BUNDLE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +50,11 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
                 .add(retainedFragment, retainedTag).commit()
 
             presenter = getPresenter()
-            retainedFragment.setPresenter(presenter, key)
+            retainedFragment.setPresenter(presenter)
         } else {
             presenter =
                 (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
-            retainedFragment.setPresenter(presenter, key)
+            retainedFragment.setPresenter(presenter)
             retainedFragment.getInfoFromBundle()
         }
     }

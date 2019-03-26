@@ -8,7 +8,6 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     private lateinit var presenter: P
     private val retainedTag = "FRAGMENT_HOLDER"
-    private val key = "FRAGMENT_BUNDLE"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -40,7 +39,6 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         presenter.attachView(view())
     }
 
-    // TODO change presenter get from bundle to retained fragment
     @Suppress("UNCHECKED_CAST")
     private fun attachPresenter() {
         var retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
@@ -51,11 +49,11 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
                 ?.commit()
 
             presenter = getPresenter()
-            retainedFragment.setPresenter(presenter, key)
+            retainedFragment.setPresenter(presenter)
         } else {
             presenter =
                 (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
-            retainedFragment.setPresenter(presenter, key)
+            retainedFragment.setPresenter(presenter)
             retainedFragment.getInfoFromBundle()
         }
     }
