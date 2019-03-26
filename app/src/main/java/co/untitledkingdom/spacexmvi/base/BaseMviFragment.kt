@@ -12,8 +12,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-                attachPresenter()
-        presenter = getPresenter()
+        attachPresenter()
 
         initialize()
     }
@@ -52,10 +51,11 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
                 ?.commit()
 
             presenter = getPresenter()
-            retainedFragment.setPresenter(presenter)
+            retainedFragment.setPresenter(presenter, key)
         } else {
-            presenter = (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
-            retainedFragment.setPresenter(presenter)
+            presenter =
+                (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
+            retainedFragment.setPresenter(presenter, key)
             retainedFragment.getInfoFromBundle()
         }
     }
