@@ -3,15 +3,14 @@ package co.untitledkingdom.spacexmvi.base
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.CallSuper
 import android.support.annotation.MainThread
-import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
 
+    // TODO some cleanup with those variables
     private lateinit var view: V
 
     private val compositeDisposable = CompositeDisposable()
@@ -23,9 +22,12 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
+    // TODO is this should be called navigation for sure
     protected open fun <I : BaseMviIntent> intentToNavigation(intent: I) {}
 
+    // TODO some cleanup with those methods
     internal fun bind() {
+        // TODO this check looks awful
         if (!subscribed) navigation()
         saveState(mapIntents())
     }
@@ -68,8 +70,8 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         compositeDisposable.add(
             stateSubject.distinctUntilChanged()
                 .subscribe { state ->
-                    Log.d("xDDD", "state: $state")
-                    view.render(state) }
+                    view.render(state)
+                }
         )
     }
 

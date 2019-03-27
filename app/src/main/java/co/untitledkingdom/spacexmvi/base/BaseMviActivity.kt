@@ -13,14 +13,18 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, in
 
     protected abstract fun getView(): V
 
+    // TODO think how it should be initialized due to dagger injection
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(modelClass)
 
+        // TODO think about this flag, condition and check
         if (!viewModel.isInitialized && savedInstanceState != null) viewModel.setInitialViewState(
             savedInstanceState.getParcelable(key)
 
         )
+
         initialize()
     }
 
@@ -40,10 +44,12 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, in
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
+        // TODO we should save actions instead of whole state because it can hold too much data
         outState?.putParcelable(key, viewModel.getViewState())
         super.onSaveInstanceState(outState)
     }
 
+    // TODO rethink if I really need this method
     open fun clear() {
         viewModelStore.clear()
     }

@@ -9,6 +9,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
 ) : Fragment() {
 
     private lateinit var viewModel: M
+    // TODO check if default key is enough or we should have more if there are more fragments than one
     private val key = "FRAGMENT_BUNDLE"
 
     protected abstract fun view(): V
@@ -23,6 +24,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
         super.onActivityCreated(savedInstanceState)
         viewModelInitialize()
 
+        // TODO rethink this flag
         if (!viewModel.isInitialized && savedInstanceState != null) viewModel.setInitialViewState(
             savedInstanceState.getParcelable(key)
         )
@@ -46,6 +48,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        // TODO we should save actions instead of whole state because it can hold too much data
         outState.putParcelable(key, viewModel.getViewState())
         super.onSaveInstanceState(outState)
     }
