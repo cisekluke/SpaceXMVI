@@ -44,14 +44,8 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, in
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        // TODO we should save actions instead of whole state because it can hold too much data
         outState?.putParcelable(key, viewModel.getViewState())
         super.onSaveInstanceState(outState)
-    }
-
-    // TODO rethink if I really need this method
-    open fun clear() {
-        viewModelStore.clear()
     }
 
     private fun initialize() {

@@ -45,7 +45,6 @@ class MainActivity :
         clearButton.setOnClickListener {
             buttonSubject.onNext(MainIntent.ClearState)
             removeFragment()
-            clear()
         }
 
         fragmentButton.setOnClickListener {
