@@ -12,7 +12,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
 
     private lateinit var view: V
 
-    private val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private var subscribed = false
     private var isInitialized = false
