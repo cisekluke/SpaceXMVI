@@ -84,5 +84,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         stateSubject.onNext(viewState)
     }
 
+    fun alreadyInitialized() = isInitialized
+
     private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
 }
