@@ -1,5 +1,8 @@
 package co.untitledkingdom.spacexmvi
 
+import co.untitledkingdom.spacexmvi.main.MainView
+import co.untitledkingdom.spacexmvi.main.MainViewModel
+import co.untitledkingdom.spacexmvi.main.MainViewState
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 

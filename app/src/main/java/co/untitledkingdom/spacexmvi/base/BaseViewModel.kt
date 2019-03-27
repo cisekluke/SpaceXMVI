@@ -14,12 +14,16 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
-    private var initialized = false
+    private var subscribed = false
+    private var isInitialized = false
+
+    protected abstract val defaultViewState: S
 
     abstract fun bind()
 
     internal fun attachView(view: V) {
         this.view = view
+        isInitialized = true
     }
 
     @CallSuper
@@ -27,8 +31,8 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
         compositeDisposable.clear()
     }
 
-    internal fun deinitialize() {
-        initialized = false
+    internal fun unsubscribe() {
+        subscribed = false
     }
 
     protected fun view(): V = view
@@ -36,11 +40,11 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
     protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
         Observable.merge(states.asIterable())
 
-    protected fun render(intents: Observable<P>, defaultViewState: S) {
-        if (!initialized) {
-            intents.scan(getViewState(defaultViewState), this::reduce)
+    protected fun render(intents: Observable<P>) {
+        if (!subscribed) {
+            intents.scan(getViewState(), this::reduce)
                .subscribe(stateSubject)
-            initialized = true
+            subscribed = true
         }
         renderStates()
     }
@@ -52,7 +56,13 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
                 .subscribe { state -> view.render(state) })
     }
 
-    private fun getViewState(defaultViewState: S) = stateSubject.value ?: defaultViewState
+    fun setInitialViewState(viewState: S) {
+        stateSubject.onNext(viewState)
+    }
+
+    fun isAlreadyInitialized() = isInitialized
+
+    fun getViewState() = stateSubject.value ?: defaultViewState
 
     private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
 }

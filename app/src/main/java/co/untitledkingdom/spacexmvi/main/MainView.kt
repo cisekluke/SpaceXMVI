@@ -1,4 +1,4 @@
-package co.untitledkingdom.spacexmvi
+package co.untitledkingdom.spacexmvi.main
 
 import co.untitledkingdom.spacexmvi.base.BaseMviView
 import io.reactivex.Observable

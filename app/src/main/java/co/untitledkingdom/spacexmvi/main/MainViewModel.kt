@@ -1,9 +1,12 @@
-package co.untitledkingdom.spacexmvi
+package co.untitledkingdom.spacexmvi.main
 
 import co.untitledkingdom.spacexmvi.base.BaseViewModel
 
 class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor()) :
     BaseViewModel<MainViewState, MainView, PartialMainViewState>() {
+
+    override val defaultViewState: MainViewState
+        get() = MainViewState()
 
     override fun bind() {
         val buttonClickObservable =
@@ -20,6 +23,6 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
 
         val mergedIntentsObservable = mergeStates(buttonClickObservable, clearButtonObservable)
 
-        render(intents = mergedIntentsObservable, defaultViewState = MainViewState())
+        render(intents = mergedIntentsObservable)
     }
 }
