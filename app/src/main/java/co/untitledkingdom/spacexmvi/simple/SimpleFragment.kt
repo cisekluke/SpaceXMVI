@@ -1,5 +1,6 @@
 package co.untitledkingdom.spacexmvi.simple
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +14,8 @@ import kotlinx.android.synthetic.main.simple_fragment.button
 import kotlinx.android.synthetic.main.simple_fragment.input
 import kotlinx.android.synthetic.main.simple_fragment.text
 
-class SimpleFragment : BaseMviFragment<SimpleViewState, MainActivity, SimpleView, SimpleViewModel>(
-    SimpleViewModel::class.java
-), SimpleView {
+class SimpleFragment :
+    BaseMviFragment<SimpleViewState, MainActivity, SimpleView, SimpleViewModel>(), SimpleView {
 
     private val buttonSubject = PublishSubject.create<SimpleIntent>()
 
@@ -33,9 +33,8 @@ class SimpleFragment : BaseMviFragment<SimpleViewState, MainActivity, SimpleView
         }
     }
 
-    override fun viewModelInitialize(fragmentActivity: MainActivity?) {
-        super.viewModelInitialize(activity as MainActivity)
-    }
+    override fun getViewModel(): SimpleViewModel =
+        ViewModelProviders.of(this)[SimpleViewModel::class.java]
 
     override fun render(viewState: SimpleViewState) {
         with(viewState) {
