@@ -7,7 +7,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     AppCompatActivity() {
 
     private lateinit var viewModel: M
-    private val key = "ACTIVITY_BUNDLE"
+    private val bundleKey = "ACTIVITY_BUNDLE"
 
     protected abstract fun getView(): V
     protected abstract fun getViewModel(): M
@@ -38,7 +38,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putParcelable(key, viewModel.getViewState())
+        outState?.putParcelable(bundleKey, viewModel.getViewState())
         super.onSaveInstanceState(outState)
     }
 
@@ -47,7 +47,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     private fun restoreStateIfExists(savedInstanceState: Bundle?) {
         if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
             viewModel.setInitialViewState(
-                savedInstanceState.getParcelable(key)
+                savedInstanceState.getParcelable(bundleKey)
             )
         }
     }

@@ -19,6 +19,14 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     private var subscribed = false
     private var isInitialized = false
 
+    fun getViewState(): S = stateSubject.value ?: defaultViewState
+
+    fun setInitialViewState(viewState: S) {
+        stateSubject.onNext(viewState)
+    }
+
+    fun isAlreadyInitialized() = isInitialized
+
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
 
     protected open fun <I : BaseMviIntent> intentWithoutAction(intent: I) {}
@@ -47,14 +55,6 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     internal fun unsubscribe() {
         subscribed = false
     }
-
-    fun getViewState(): S = stateSubject.value ?: defaultViewState
-
-    fun setInitialViewState(viewState: S) {
-        stateSubject.onNext(viewState)
-    }
-
-    fun isAlreadyInitialized() = isInitialized
 
     private fun subscribe(intents: Observable<A>) {
         intents.scan(getViewState(), this::reduce)
