@@ -21,7 +21,7 @@ class MainViewModel(private val mainInteractor: MainInteractor = MainInteractor(
             else -> just(MainAction.Nothing)
         }
 
-    //    override fun <I : BaseMviIntent> intentToNavigation(intent: I) {
+    //    override fun <I : BaseMviIntent> intentWithoutAction(intent: I) {
     //        when (intent) {
     //            MainIntent.DisplayFragmentState(true) -> navigator.displayFragment(true)
     //        }

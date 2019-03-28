@@ -9,7 +9,7 @@ import io.reactivex.subjects.BehaviorSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
-    
+
     private lateinit var view: V
 
     private val compositeDisposable = CompositeDisposable()
@@ -20,9 +20,8 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     protected abstract val defaultViewState: S
 
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
-
-    // TODO is this should be called navigation for sure
-    protected open fun <I : BaseMviIntent> intentToNavigation(intent: I) {}
+    
+    protected open fun <I : BaseMviIntent> intentWithoutAction(intent: I) {}
 
     // TODO some cleanup with those methods
     internal fun bind() {
@@ -61,7 +60,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     }
 
     private fun navigation() {
-        compositeDisposable.add(view.emitNavigationIntent().subscribe { intentToNavigation(it) })
+        compositeDisposable.add(view.emitNavigationIntent().subscribe { intentWithoutAction(it) })
     }
 
     @MainThread
