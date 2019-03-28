@@ -15,14 +15,10 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     override fun onCreate(savedInstanceState: Bundle?) {
         injection()
         super.onCreate(savedInstanceState)
+
         viewModel = getViewModel()
 
-        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
-            viewModel.setInitialViewState(
-                savedInstanceState.getParcelable(key)
-            )
-        }
-
+        restoreStateIfExists(savedInstanceState)
         initialize()
     }
 
@@ -47,6 +43,14 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     }
 
     protected open fun injection() {}
+
+    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
+        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
+            viewModel.setInitialViewState(
+                savedInstanceState.getParcelable(key)
+            )
+        }
+    }
 
     private fun initialize() {
         viewModel.attachView(getView())
