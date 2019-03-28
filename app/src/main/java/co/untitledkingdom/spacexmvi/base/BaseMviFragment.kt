@@ -1,10 +1,10 @@
 package co.untitledkingdom.spacexmvi.base
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
-abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, *>, V : BaseMviView<VS, *>, M : BaseViewModel<VS, V, *>> : Fragment() {
+abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, *>, V : BaseMviView<VS, *>, M : BaseViewModel<VS, V, *>> :
+    Fragment() {
 
     private lateinit var viewModel: M
     // TODO check if default key is enough or we should have more if there are more fragments than one
@@ -15,10 +15,10 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     protected abstract fun getViewModel(): M
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        injection()
         super.onActivityCreated(savedInstanceState)
         viewModel = getViewModel()
 
-        // TODO rethink this flag
         if (!viewModel.isInitialized && savedInstanceState != null) viewModel.setInitialViewState(
             savedInstanceState.getParcelable(key)
         )
@@ -42,10 +42,11 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        // TODO we should save actions instead of whole state because it can hold too much data
         outState.putParcelable(key, viewModel.getViewState())
         super.onSaveInstanceState(outState)
     }
+
+    protected open fun injection() {}
 
     private fun initialize() {
         viewModel.attachView(view())
