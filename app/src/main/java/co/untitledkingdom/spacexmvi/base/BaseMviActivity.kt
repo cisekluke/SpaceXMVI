@@ -10,7 +10,6 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     private val bundleKey = "ACTIVITY_BUNDLE"
 
     protected abstract fun getView(): V
-    protected abstract fun getViewModel(): M
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injection()
@@ -20,6 +19,24 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
 
         restoreStateIfExists(savedInstanceState)
         initialize()
+    }
+
+    protected open fun injection() {}
+
+    protected abstract fun getViewModel(): M
+
+    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
+        if (newViewModelHasBeenCreated() && savedInstanceState != null) {
+            viewModel.setInitialViewState(
+                savedInstanceState.getParcelable(bundleKey)
+            )
+        }
+    }
+
+    private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
+
+    private fun initialize() {
+        viewModel.attachView(getView())
     }
 
     override fun onStart() {
@@ -40,19 +57,5 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putParcelable(bundleKey, viewModel.getViewState())
         super.onSaveInstanceState(outState)
-    }
-
-    protected open fun injection() {}
-
-    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
-        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
-            viewModel.setInitialViewState(
-                savedInstanceState.getParcelable(bundleKey)
-            )
-        }
-    }
-
-    private fun initialize() {
-        viewModel.attachView(getView())
     }
 }
