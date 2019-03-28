@@ -10,6 +10,8 @@ import io.reactivex.subjects.BehaviorSubject
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
 
+    protected abstract val defaultViewState: S
+
     private lateinit var view: V
 
     private val compositeDisposable = CompositeDisposable()
@@ -17,22 +19,24 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
     private var subscribed = false
     private var isInitialized = false
 
-    protected abstract val defaultViewState: S
-
     protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
-    
+
     protected open fun <I : BaseMviIntent> intentWithoutAction(intent: I) {}
 
-    // TODO some cleanup with those methods
-    internal fun bind() {
-        // TODO this check looks awful
-        if (!subscribed) navigation()
-        saveState(mapIntents())
-    }
+    protected fun just(action: A): Observable<A> = Observable.just(action)
 
     @CallSuper
     internal open fun unbind() {
         compositeDisposable.clear()
+    }
+
+    internal fun bind() {
+        if (!subscribed) {
+            navigation()
+            subscribe(mapIntents())
+        }
+
+        renderStates()
     }
 
     internal fun attachView(view: V) {
@@ -44,23 +48,21 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         subscribed = false
     }
 
-    protected fun just(action: A): Observable<A> = Observable.just(action)
+    fun getViewState(): S = stateSubject.value ?: defaultViewState
 
-    private fun saveState(intents: Observable<A>) {
-        if (!subscribed) {
-            intents.scan(getViewState(), this::reduce)
-                .replay(1)
-                .autoConnect(0)
-                .subscribe(stateSubject)
-
-            subscribed = true
-        }
-
-        renderStates()
+    fun setInitialViewState(viewState: S) {
+        stateSubject.onNext(viewState)
     }
 
-    private fun navigation() {
-        compositeDisposable.add(view.emitNavigationIntent().subscribe { intentWithoutAction(it) })
+    fun isAlreadyInitialized() = isInitialized
+
+    private fun subscribe(intents: Observable<A>) {
+        intents.scan(getViewState(), this::reduce)
+            .replay(1)
+            .autoConnect(0)
+            .subscribe(stateSubject)
+
+        subscribed = true
     }
 
     @MainThread
@@ -73,16 +75,17 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         )
     }
 
-    private fun mapIntents(): Observable<A> = view.emitIntent()
-        .flatMap { intentToAction(it) }
-
-    fun getViewState(): S = stateSubject.value ?: defaultViewState
-
-    fun setInitialViewState(viewState: S) {
-        stateSubject.onNext(viewState)
+    private fun navigation() {
+        compositeDisposable.add(
+            view.emitNavigationIntent()
+                .subscribe { intentWithoutAction(it) }
+        )
     }
 
-    fun isAlreadyInitialized() = isInitialized
+    private fun mapIntents(): Observable<A> =
+        view.emitIntent()
+            .flatMap { intentToAction(it) }
 
-    private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
+    private fun reduce(previousState: S, partialState: A): S =
+        partialState.reduce(previousState)
 }
