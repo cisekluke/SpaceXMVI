@@ -1,5 +1,6 @@
 package co.untitledkingdom.spacexmvi.main
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -16,14 +17,17 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-    BaseMviActivity<MainViewState, MainView, MainViewModel>(
-        MainViewModel::class.java),
+    BaseMviActivity<MainViewState, MainView, MainViewModel>(),
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()
 
     private val buttonSubject = PublishSubject.create<Boolean>()
     private val clearSubject = PublishSubject.create<Boolean>()
+
+    override fun getViewModel(): MainViewModel {
+        return ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,21 +1,23 @@
 package co.untitledkingdom.spacexmvi.base
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, in M : BaseViewModel<VS, V, *>>(
-    private val modelClass: Class<M>
-) : AppCompatActivity() {
+// TODO think about adding base method to do injection
+abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, M : BaseViewModel<VS, V, *>>
+    : AppCompatActivity() {
 
     private lateinit var viewModel: M
     private val key = "ACTIVITY_BUNDLE"
 
     abstract fun getView(): V
 
+    abstract fun getViewModel(): M
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(modelClass)
+
+        viewModel = getViewModel()
 
         if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
             viewModel.setInitialViewState(
