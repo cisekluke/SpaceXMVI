@@ -1,5 +1,6 @@
 package co.untitledkingdom.spacexmvi.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
@@ -11,16 +12,36 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
 
     protected abstract fun view(): V
 
-    protected abstract fun getViewModel(): M
+    override fun onAttach(context: Context?) {
+        injection()
+        super.onAttach(context)
+    }
+
+    protected open fun injection() {}
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        injection()
         super.onActivityCreated(savedInstanceState)
 
         viewModel = getViewModel()
 
         restoreStateIfExists(savedInstanceState)
         initialize()
+    }
+
+    protected abstract fun getViewModel(): M
+
+    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
+        if (newViewModelHasBeenCreated() && savedInstanceState != null) {
+            viewModel.setInitialViewState(
+                savedInstanceState.getParcelable(bundleKey)
+            )
+        }
+    }
+
+    private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
+
+    private fun initialize() {
+        viewModel.attachView(view())
     }
 
     override fun onStart() {
@@ -41,19 +62,5 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(bundleKey, viewModel.getViewState())
         super.onSaveInstanceState(outState)
-    }
-
-    protected open fun injection() {}
-
-    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
-        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
-            viewModel.setInitialViewState(
-                savedInstanceState.getParcelable(bundleKey)
-            )
-        }
-    }
-
-    private fun initialize() {
-        viewModel.attachView(view())
     }
 }

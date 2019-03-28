@@ -8,5 +8,5 @@ interface BaseMviView<in V : BaseMviViewState, I : BaseMviIntent> {
 
     fun emitIntent(): Observable<I>
 
-    fun emitNavigationIntent(): Observable<I> = Observable.never<I>()
+    fun emitIntentWithoutAction(): Observable<I> = Observable.never<I>()
 }

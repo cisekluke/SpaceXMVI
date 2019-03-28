@@ -61,7 +61,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     private fun subscribeWithoutStates() {
         compositeDisposable.add(
-            view.emitNavigationIntent()
+            view.emitIntentWithoutAction()
                 .subscribe { intentWithoutAction(it) }
         )
     }
