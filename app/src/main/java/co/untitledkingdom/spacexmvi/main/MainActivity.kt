@@ -1,8 +1,8 @@
 package co.untitledkingdom.spacexmvi.main
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.text.method.TextKeyListener.clear
 import android.view.View
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviActivity
@@ -20,9 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-    BaseMviActivity<MainViewState, MainView, MainViewModel>(
-        MainViewModel::class.java
-    ),
+    BaseMviActivity<MainViewState, MainView, MainViewModel>(),
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()
@@ -65,10 +63,12 @@ class MainActivity :
 
     override fun getView(): MainView = this
 
+    override fun getViewModel(): MainViewModel = ViewModelProviders.of(this)[MainViewModel::class.java]
+
     override fun emitIntent(): Observable<MainIntent> =
         Observable.merge(buttonSubject, clearSubject, fragmentSubject)
 
-//    override fun emitNavigationIntent(): Observable<MainIntent>  = fragmentSubject
+    //    override fun emitNavigationIntent(): Observable<MainIntent>  = fragmentSubject
 
     private fun initRecyclerView() {
         rocketsRecyclerView.layoutManager = LinearLayoutManager(this)
