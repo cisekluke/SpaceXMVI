@@ -9,14 +9,13 @@ import io.reactivex.subjects.BehaviorSubject
 
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
     ViewModel() {
-
-    // TODO some cleanup with those variables
+    
     private lateinit var view: V
 
     private val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
-    var isInitialized = false
     private var subscribed = false
+    private var isInitialized = false
 
     protected abstract val defaultViewState: S
 
@@ -84,7 +83,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
         stateSubject.onNext(viewState)
     }
 
-    fun alreadyInitialized() = isInitialized
+    fun isAlreadyInitialized() = isInitialized
 
     private fun reduce(previousState: S, partialState: A): S = partialState.reduce(previousState)
 }

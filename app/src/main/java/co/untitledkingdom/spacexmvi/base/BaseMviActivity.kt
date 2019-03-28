@@ -17,7 +17,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
         super.onCreate(savedInstanceState)
         viewModel = getViewModel()
 
-        if (!viewModel.alreadyInitialized() && savedInstanceState != null) {
+        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
             viewModel.setInitialViewState(
                 savedInstanceState.getParcelable(key)
             )
