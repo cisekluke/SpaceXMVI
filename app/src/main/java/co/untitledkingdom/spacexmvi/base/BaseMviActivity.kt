@@ -12,9 +12,8 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     protected abstract fun getView(): V
     protected abstract fun getViewModel(): M
 
-    // TODO think about base injection method
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        injection()
         super.onCreate(savedInstanceState)
         viewModel = getViewModel()
 
@@ -46,6 +45,8 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
         outState?.putParcelable(key, viewModel.getViewState())
         super.onSaveInstanceState(outState)
     }
+
+    protected open fun injection() {}
 
     private fun initialize() {
         viewModel.attachView(getView())
