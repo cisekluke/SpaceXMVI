@@ -33,7 +33,7 @@ class SimpleFragment :
         }
     }
 
-    override fun getViewModel(): SimpleViewModel =
+    override fun setViewModel(): SimpleViewModel =
         ViewModelProviders.of(this)[SimpleViewModel::class.java]
 
     override fun render(viewState: SimpleViewState) {
@@ -44,5 +44,5 @@ class SimpleFragment :
 
     override fun emitIntent(): Observable<SimpleIntent> = buttonSubject
 
-    override fun view(): SimpleView = this
+    override fun setView(): SimpleView = this
 }

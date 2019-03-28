@@ -61,9 +61,9 @@ class MainActivity :
         }
     }
 
-    override fun getView(): MainView = this
+    override fun setView(): MainView = this
 
-    override fun getViewModel(): MainViewModel = ViewModelProviders.of(this)[MainViewModel::class.java]
+    override fun setViewModel(): MainViewModel = ViewModelProviders.of(this)[MainViewModel::class.java]
 
     override fun emitIntent(): Observable<MainIntent> =
         Observable.merge(buttonSubject, clearSubject, fragmentSubject)

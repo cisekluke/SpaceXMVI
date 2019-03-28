@@ -9,13 +9,11 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     private lateinit var viewModel: M
     private val bundleKey = "ACTIVITY_BUNDLE"
 
-    protected abstract fun getView(): V
-
     override fun onCreate(savedInstanceState: Bundle?) {
         injection()
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel()
+        viewModel = setViewModel()
 
         restoreStateIfExists(savedInstanceState)
         initialize()
@@ -23,7 +21,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
 
     protected open fun injection() {}
 
-    protected abstract fun getViewModel(): M
+    protected abstract fun setViewModel(): M
 
     private fun restoreStateIfExists(savedInstanceState: Bundle?) {
         if (newViewModelHasBeenCreated() && savedInstanceState != null) {
@@ -36,8 +34,10 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
 
     private fun initialize() {
-        viewModel.attachView(getView())
+        viewModel.attachView(setView())
     }
+
+    protected abstract fun setView(): V
 
     override fun onStart() {
         super.onStart()

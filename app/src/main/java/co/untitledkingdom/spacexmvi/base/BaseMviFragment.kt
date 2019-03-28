@@ -10,8 +10,6 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     private lateinit var viewModel: M
     private val bundleKey = "FRAGMENT_BUNDLE"
 
-    protected abstract fun view(): V
-
     override fun onAttach(context: Context?) {
         injection()
         super.onAttach(context)
@@ -22,13 +20,13 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel = getViewModel()
+        viewModel = setViewModel()
 
         restoreStateIfExists(savedInstanceState)
         initialize()
     }
 
-    protected abstract fun getViewModel(): M
+    protected abstract fun setViewModel(): M
 
     private fun restoreStateIfExists(savedInstanceState: Bundle?) {
         if (newViewModelHasBeenCreated() && savedInstanceState != null) {
@@ -41,8 +39,10 @@ abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, 
     private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
 
     private fun initialize() {
-        viewModel.attachView(view())
+        viewModel.attachView(setView())
     }
+
+    protected abstract fun setView(): V
 
     override fun onStart() {
         super.onStart()
