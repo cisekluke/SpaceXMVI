@@ -51,12 +51,12 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     }
 
     private fun retainedFragmentHasInstance() =
-        (activity?.supportFragmentManager?.findFragmentByTag(retainedTag) != null)
+        (childFragmentManager.findFragmentByTag(retainedTag) != null)
 
     private fun createRetainedFragment() {
         val retainedFragment = BaseRetainedFragment<VS, P>()
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.add(retainedFragment, retainedTag)?.commit()
+        childFragmentManager.beginTransaction()
+            .add(retainedFragment, retainedTag).commit()
 
         presenter = getPresenter()
         setPresenterInstance(retainedFragment)
@@ -64,7 +64,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     @Suppress("UNCHECKED_CAST")
     private fun getPresenterFromRetainedFragment() {
-        val retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
+        val retainedFragment = childFragmentManager.findFragmentByTag(retainedTag)
 
         presenter =
             (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
