@@ -16,11 +16,11 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     private lateinit var viewModel: M
     private val bundleKey = "ACTIVITY_BUNDLE"
 
+    /**
+     * Following official Dagger&Android documentation we need to perform injection before super.onCreate call.
+     * Read the <a href="https://google.github.io/dagger/android#when-to-inject">Google documentation</a>
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
-        /**
-         * Following official Dagger&Android documentation we need to perform injection before super.onCreate call.
-         * Read the <a href="https://google.github.io/dagger/android#when-to-inject">Google documentation</a>
-         */
         injection()
         super.onCreate(savedInstanceState)
 
@@ -31,7 +31,8 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     }
 
     /**
-     * Not every project has Dagger and also, it's API changes so it's open to fill by custom implementation.
+     * Not every project has Dagger dependencies and also, it's API changes so it's open to fill by custom
+     * implementation.
      */
     protected open fun injection() {}
 
@@ -57,10 +58,16 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
         }
     }
 
+    /**
+     * This method is being used to load state from the Bundle only in case that we can't restore it from
+     * the ViewModel.
+     *
+     * @return if true that means there's a new instance of ViewModel
+     */
     private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
 
     /**
-     * Attaching View to the Presentation layer.
+     * Sending View to the ViewModel.
      */
     private fun initialize() {
         viewModel.attachView(setView())
@@ -73,16 +80,27 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
      */
     protected abstract fun setView(): V
 
+    /**
+     * Calls ViewModel method that will start subscription.
+     */
     override fun onStart() {
         super.onStart()
         viewModel.bind()
     }
 
+    /**
+     * Calls ViewModel method that will clear it's Disposables. This needs to be called in that lifecycle method
+     * to avoid memory leaks.
+     */
     override fun onStop() {
         viewModel.unbind()
         super.onStop()
     }
 
+    /**
+     * Calls ViewModel method that will change flag inside it so it will know that View has been destroyed and
+     * it should subscribe to intent emitter again.
+     */
     override fun onDestroy() {
         viewModel.unsubscribe()
         super.onDestroy()
