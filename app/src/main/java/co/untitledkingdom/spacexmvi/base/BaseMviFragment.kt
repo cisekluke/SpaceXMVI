@@ -39,22 +39,38 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         presenter.attachView(view())
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun attachPresenter() {
-        var retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
-
-        if (retainedFragment == null) {
-            retainedFragment = BaseRetainedFragment<VS, P>()
-            activity?.supportFragmentManager?.beginTransaction()?.add(retainedFragment, retainedTag)
-                ?.commit()
-
-            presenter = getPresenter()
-            retainedFragment.setPresenter(presenter)
+        if (!retainedFragmentHasInstance()) {
+            createRetainedFragment()
         } else {
-            presenter =
-                (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
-            retainedFragment.setPresenter(presenter)
-            retainedFragment.getInfoFromBundle()
+            getPresenterFromRetainedFragment()
         }
+    }
+
+    private fun retainedFragmentHasInstance() =
+        (activity?.supportFragmentManager?.findFragmentByTag(retainedTag) != null)
+
+    private fun createRetainedFragment() {
+        val retainedFragment = BaseRetainedFragment<VS, P>()
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.add(retainedFragment, retainedTag)?.commit()
+
+        presenter = getPresenter()
+        setPresenterInstance(retainedFragment)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getPresenterFromRetainedFragment() {
+        val retainedFragment = activity?.supportFragmentManager?.findFragmentByTag(retainedTag)
+
+        presenter =
+            (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
+        setPresenterInstance(retainedFragment)
+
+        retainedFragment.getInfoFromBundle()
+    }
+
+    private fun setPresenterInstance(retainedFragment: BaseRetainedFragment<VS, P>) {
+        retainedFragment.setPresenter(presenter)
     }
 }
