@@ -10,11 +10,14 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     private val retainedTag = "FRAGMENT_HOLDER"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        injection()
         super.onActivityCreated(savedInstanceState)
-        attachPresenter()
 
+        attachPresenter()
         initialize()
     }
+
+    protected open fun injection() {}
 
     override fun onStart() {
         super.onStart()

@@ -10,11 +10,14 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     private val retainedTag = "HOLDER"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injection()
         super.onCreate(savedInstanceState)
         attachPresenter()
 
         initialize()
     }
+
+    protected open fun injection() {}
 
     override fun onStart() {
         super.onStart()
