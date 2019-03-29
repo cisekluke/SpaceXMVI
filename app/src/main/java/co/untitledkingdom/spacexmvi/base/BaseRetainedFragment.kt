@@ -17,6 +17,7 @@ class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>
         previousInstance = savedInstanceState
     }
 
+    // TODO think if should be any calls to presenter from that class
     override fun onSaveInstanceState(outState: Bundle) {
         presenter?.saveLastViewState(key, outState)
         super.onSaveInstanceState(outState)
@@ -24,7 +25,6 @@ class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>
 
     fun getInfoFromBundle() {
         previousInstance?.let { savedInstance ->
-            Log.d("xDDD", "${savedInstance.getParcelable<VS>(key)}")
             presenter?.initState(savedInstance.getParcelable(key))
         }
     }

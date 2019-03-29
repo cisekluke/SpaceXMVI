@@ -39,23 +39,38 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         presenter.attachView(getView())
     }
 
-    // TODO do something with else
-    @Suppress("UNCHECKED_CAST")
     private fun attachPresenter() {
-        var retainedFragment = supportFragmentManager.findFragmentByTag(retainedTag)
-
-        if (retainedFragment == null) {
-            retainedFragment = BaseRetainedFragment<VS, P>()
-            supportFragmentManager.beginTransaction()
-                .add(retainedFragment, retainedTag).commit()
-
-            presenter = getPresenter()
-            retainedFragment.setPresenter(presenter)
+        if (!retainedFragmentHasInstance()) {
+            createRetainedFragment()
         } else {
-            presenter =
-                (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
-            retainedFragment.setPresenter(presenter)
-            retainedFragment.getInfoFromBundle()
+            getPresenterFromRetainedFragment()
         }
+    }
+
+    private fun retainedFragmentHasInstance() =
+        (supportFragmentManager.findFragmentByTag(retainedTag) != null)
+
+    private fun createRetainedFragment() {
+        val retainedFragment = BaseRetainedFragment<VS, P>()
+        supportFragmentManager.beginTransaction()
+            .add(retainedFragment, retainedTag).commit()
+
+        presenter = getPresenter()
+        setPresenterInstance(retainedFragment)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun getPresenterFromRetainedFragment() {
+        val retainedFragment = supportFragmentManager.findFragmentByTag(retainedTag)
+
+        presenter =
+            (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
+        setPresenterInstance(retainedFragment)
+
+        retainedFragment.getInfoFromBundle()
+    }
+
+    private fun setPresenterInstance(retainedFragment: BaseRetainedFragment<VS, P>) {
+        retainedFragment.setPresenter(presenter)
     }
 }

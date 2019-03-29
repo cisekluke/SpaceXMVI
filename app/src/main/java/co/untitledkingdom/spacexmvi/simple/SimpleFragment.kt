@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviFragment
-import co.untitledkingdom.spacexmvi.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_simple.button
