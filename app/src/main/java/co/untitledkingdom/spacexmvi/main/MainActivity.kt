@@ -25,7 +25,7 @@ class MainActivity :
     private val buttonSubject = PublishSubject.create<Boolean>()
     private val clearSubject = PublishSubject.create<Boolean>()
 
-    override fun getViewModel(): MainViewModel {
+    override fun setViewModel(): MainViewModel {
         return ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
 
@@ -82,7 +82,7 @@ class MainActivity :
         }
     }
 
-    override fun getView(): MainView = this
+    override fun setView(): MainView = this
 
     override fun emitButtonClick(): Observable<Boolean> = buttonSubject
 

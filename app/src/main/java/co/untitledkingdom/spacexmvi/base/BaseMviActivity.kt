@@ -3,30 +3,41 @@ package co.untitledkingdom.spacexmvi.base
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-// TODO think about adding base method to do injection
 abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, M : BaseViewModel<VS, V, *>>
     : AppCompatActivity() {
 
     private lateinit var viewModel: M
-    private val key = "ACTIVITY_BUNDLE"
-
-    abstract fun getView(): V
-
-    abstract fun getViewModel(): M
+    private val bundleKey = "ACTIVITY_BUNDLE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injection()
         super.onCreate(savedInstanceState)
 
-        viewModel = getViewModel()
+        viewModel = setViewModel()
 
-        if (!viewModel.isAlreadyInitialized() && savedInstanceState != null) {
-            viewModel.setInitialViewState(
-                savedInstanceState.getParcelable(key)
-            )
-        }
-
+        restoreStateIfExists(savedInstanceState)
         initialize()
     }
+
+    protected open fun injection() {}
+
+    abstract fun setViewModel(): M
+
+    private fun restoreStateIfExists(savedInstanceState: Bundle?) {
+        if (newViewModelHasBeenCreated() && savedInstanceState != null) {
+            viewModel.setInitialViewState(
+                savedInstanceState.getParcelable(bundleKey)
+            )
+        }
+    }
+
+    private fun newViewModelHasBeenCreated() = !viewModel.isAlreadyInitialized()
+
+    private fun initialize() {
+        viewModel.attachView(setView())
+    }
+
+    abstract fun setView(): V
 
     override fun onStart() {
         super.onStart()
@@ -44,11 +55,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, M : B
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putParcelable(key, viewModel.getViewState())
+        outState?.putParcelable(bundleKey, viewModel.getViewState())
         super.onSaveInstanceState(outState)
-    }
-
-    private fun initialize() {
-        viewModel.attachView(getView())
     }
 }
