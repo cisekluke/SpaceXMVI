@@ -12,7 +12,7 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.Test
 
-class MainViewModgelTest {
+class MainViewModelTest {
 
     private val mainInteractor: MainInteractor = mock()
 
