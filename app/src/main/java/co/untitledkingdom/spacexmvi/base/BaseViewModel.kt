@@ -10,20 +10,52 @@ import io.reactivex.subjects.BehaviorSubject
 abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseMviPartialState<S>> :
     ViewModel() {
 
+    protected abstract val defaultViewState: S
+
     private lateinit var view: V
 
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val compositeDisposable = CompositeDisposable()
     private val stateSubject = BehaviorSubject.create<S>()
     private var subscribed = false
     private var isInitialized = false
 
-    protected abstract val defaultViewState: S
+    internal fun isAlreadyInitialized() = isInitialized
 
-    abstract fun bind()
+    internal fun setInitialViewState(viewState: S) {
+        stateSubject.onNext(viewState)
+    }
 
     internal fun attachView(view: V) {
         this.view = view
         isInitialized = true
+    }
+
+    abstract fun bind()
+
+    protected fun view(): V = view
+
+    protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
+        Observable.merge(states.asIterable())
+
+    protected fun render(intents: Observable<P>) {
+        if (!subscribed) {
+            intents.scan(getViewState(), this::reduce)
+                .subscribe(stateSubject)
+            subscribed = true
+        }
+        renderStates()
+    }
+
+    internal fun getViewState() = stateSubject.value ?: defaultViewState
+
+    private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
+
+    @MainThread
+    private fun renderStates() {
+        compositeDisposable.add(
+            stateSubject.distinctUntilChanged()
+                .subscribe { state -> view.render(state) })
     }
 
     @CallSuper
@@ -34,35 +66,4 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S>, P : BaseM
     internal fun unsubscribe() {
         subscribed = false
     }
-
-    protected fun view(): V = view
-
-    protected fun mergeStates(vararg states: Observable<P>): Observable<P> =
-        Observable.merge(states.asIterable())
-
-    protected fun render(intents: Observable<P>) {
-        if (!subscribed) {
-            intents.scan(getViewState(), this::reduce)
-               .subscribe(stateSubject)
-            subscribed = true
-        }
-        renderStates()
-    }
-
-    @MainThread
-    private fun renderStates() {
-        compositeDisposable.add(
-            stateSubject.distinctUntilChanged()
-                .subscribe { state -> view.render(state) })
-    }
-
-    fun setInitialViewState(viewState: S) {
-        stateSubject.onNext(viewState)
-    }
-
-    fun isAlreadyInitialized() = isInitialized
-
-    fun getViewState() = stateSubject.value ?: defaultViewState
-
-    private fun reduce(previousState: S, partialState: P): S = partialState.reduce(previousState)
 }
