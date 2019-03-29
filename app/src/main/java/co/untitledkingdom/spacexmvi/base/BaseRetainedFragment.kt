@@ -2,7 +2,6 @@ package co.untitledkingdom.spacexmvi.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 
 class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>> : Fragment() {
 
@@ -23,11 +22,7 @@ class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>
         super.onSaveInstanceState(outState)
     }
 
-    fun getInfoFromBundle() {
-        previousInstance?.let { savedInstance ->
-            presenter?.initState(savedInstance.getParcelable(key))
-        }
-    }
+    fun getInfoFromBundle() = previousInstance?.getParcelable<VS>(key)
 
     fun setPresenter(presenter: P) {
         this.presenter = presenter

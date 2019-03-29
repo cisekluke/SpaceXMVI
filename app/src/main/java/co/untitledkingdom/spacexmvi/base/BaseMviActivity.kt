@@ -70,7 +70,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
             (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
         setPresenterInstance(retainedFragment)
 
-        retainedFragment.getInfoFromBundle()
+        retainedFragment.getInfoFromBundle()?.let { presenter.initState(it) }
     }
 
     private fun setPresenterInstance(retainedFragment: BaseRetainedFragment<VS, P>) {
