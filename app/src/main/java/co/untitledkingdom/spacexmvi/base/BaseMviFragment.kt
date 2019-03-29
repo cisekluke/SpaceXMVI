@@ -51,7 +51,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     }
 
     private fun retainedFragmentHasInstance() =
-        (childFragmentManager.findFragmentByTag(retainedTag) != null)
+        (findRetainedFragment() != null)
 
     private fun createRetainedFragment() {
         val retainedFragment = BaseRetainedFragment<VS, P>()
@@ -64,7 +64,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     @Suppress("UNCHECKED_CAST")
     private fun getPresenterFromRetainedFragment() {
-        val retainedFragment = childFragmentManager.findFragmentByTag(retainedTag)
+        val retainedFragment = findRetainedFragment()
 
         presenter =
             (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
@@ -76,4 +76,6 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     private fun setPresenterInstance(retainedFragment: BaseRetainedFragment<VS, P>) {
         retainedFragment.setPresenter(presenter)
     }
+
+    private fun findRetainedFragment() = childFragmentManager.findFragmentByTag(retainedTag)
 }
