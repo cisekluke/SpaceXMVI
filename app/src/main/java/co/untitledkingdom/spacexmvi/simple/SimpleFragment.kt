@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.BaseMviFragment
-import co.untitledkingdom.spacexmvi.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.simple_fragment.button
@@ -15,7 +14,7 @@ import kotlinx.android.synthetic.main.simple_fragment.input
 import kotlinx.android.synthetic.main.simple_fragment.text
 
 class SimpleFragment :
-    BaseMviFragment<SimpleViewState, MainActivity, SimpleView, SimpleViewModel>(), SimpleView {
+    BaseMviFragment<SimpleViewState, SimpleView, SimpleViewModel>(), SimpleView {
 
     private val buttonSubject = PublishSubject.create<SimpleIntent>()
 

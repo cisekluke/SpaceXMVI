@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 
-abstract class BaseMviFragment<VS : BaseMviViewState, A : BaseMviActivity<*, *, *>, V : BaseMviView<VS, *>, M : BaseViewModel<VS, V, *>> :
+abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS, *>, M : BaseViewModel<VS, V, *>> :
     Fragment() {
 
     private lateinit var viewModel: M
