@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>> : Fragment() {
 
     private var presenter: P? = null
-    // TODO think about those keys if one is enough or it should be provided by child
     private var key = "FRAGMENT_BUNDLE"
     private var previousInstance: Bundle? = null
 
@@ -16,7 +15,6 @@ class BaseRetainedFragment<VS : BaseMviViewState, P : BaseMviPresenter<VS, *, *>
         previousInstance = savedInstanceState
     }
 
-    // TODO think if should be any calls to presenter from that class
     override fun onSaveInstanceState(outState: Bundle) {
         presenter?.saveLastViewState(key, outState)
         super.onSaveInstanceState(outState)
