@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import co.untitledkingdom.spacexmvi.R
 import co.untitledkingdom.spacexmvi.base.MvvmiFragment
+import co.untitledkingdom.spacexmvi.main.MainActivity
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.simple_fragment.button
@@ -33,7 +34,7 @@ class SimpleFragment :
     }
 
     override fun setViewModel(): SimpleViewModel =
-        ViewModelProviders.of(this)[SimpleViewModel::class.java]
+        ViewModelProviders.of(activity as MainActivity)[SimpleViewModel::class.java]
 
     override fun render(viewState: SimpleViewState) {
         with(viewState) {
