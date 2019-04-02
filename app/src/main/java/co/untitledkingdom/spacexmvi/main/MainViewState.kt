@@ -1,6 +1,6 @@
 package co.untitledkingdom.spacexmvi.main
 
-import co.untitledkingdom.spacexmvi.base.BaseMviViewState
+import co.untitledkingdom.spacexmvi.base.MvvmiViewState
 import co.untitledkingdom.spacexmvi.models.Rocket
 import kotlinx.android.parcel.Parcelize
 
@@ -10,4 +10,4 @@ data class MainViewState(
     val error: Boolean = false,
     val rocketList: List<Rocket> = listOf(),
     val displayFragment: Boolean = false
-) : BaseMviViewState
+) : MvvmiViewState

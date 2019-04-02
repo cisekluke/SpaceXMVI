@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import co.untitledkingdom.spacexmvi.R
-import co.untitledkingdom.spacexmvi.base.BaseMviActivity
+import co.untitledkingdom.spacexmvi.base.MvvmiActivity
 import co.untitledkingdom.spacexmvi.list.RocketsAdapter
 import co.untitledkingdom.spacexmvi.models.Rocket
 import co.untitledkingdom.spacexmvi.simple.SimpleFragment
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.rocketsRecyclerView
 import kotlinx.android.synthetic.main.activity_main.showMeRocketsButton
 
 class MainActivity :
-    BaseMviActivity<MainViewState, MainView, MainViewModel>(),
+    MvvmiActivity<MainViewState, MainView, MainViewModel>(),
     MainView {
 
     private val rocketsAdapter = RocketsAdapter()

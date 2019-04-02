@@ -1,5 +1,5 @@
 package co.untitledkingdom.spacexmvi.simple
 
-import co.untitledkingdom.spacexmvi.base.BaseMviView
+import co.untitledkingdom.spacexmvi.base.MvvmiView
 
-interface SimpleView : BaseMviView<SimpleViewState, SimpleIntent>
+interface SimpleView : MvvmiView<SimpleViewState, SimpleIntent>

@@ -1,5 +1,5 @@
 package co.untitledkingdom.spacexmvi.main
 
-import co.untitledkingdom.spacexmvi.base.BaseMviView
+import co.untitledkingdom.spacexmvi.base.MvvmiView
 
-interface MainView : BaseMviView<MainViewState, MainIntent>
+interface MainView : MvvmiView<MainViewState, MainIntent>

@@ -2,7 +2,7 @@ package co.untitledkingdom.spacexmvi
 
 import android.content.Intent
 import android.view.View
-import co.untitledkingdom.spacexmvi.base.BaseMviActivity
+import co.untitledkingdom.spacexmvi.base.MvvmiActivity
 import co.untitledkingdom.spacexmvi.main.MainActivity
 import co.untitledkingdom.spacexmvi.main.MainView
 import co.untitledkingdom.spacexmvi.main.MainViewModel
@@ -10,7 +10,7 @@ import co.untitledkingdom.spacexmvi.main.MainViewState
 import co.untitledkingdom.spacexmvi.simple.SimpleFragment
 import kotlinx.android.synthetic.main.activity_main.fragmentContainer
 
-class Navigator(private val activity: BaseMviActivity<MainViewState, MainView, MainViewModel>) {
+class Navigator(private val activity: MvvmiActivity<MainViewState, MainView, MainViewModel>) {
 
     private val defaultTag = "TAG"
 

@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity
  * @param V stands for View interface
  * @param M presentation layer which is lifecycle awareness
  */
-abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M : BaseViewModel<VS, V, *>> :
+abstract class MvvmiActivity<VS : MvvmiViewState, V : MvvmiView<VS, *>, M : MvvmiModel<VS, V, *>> :
     AppCompatActivity() {
 
     private lateinit var viewModel: M
@@ -39,7 +39,7 @@ abstract class BaseMviActivity<VS : BaseMviViewState, V : BaseMviView<VS, *>, M 
     /**
      * Set ViewModel by calling this method inside feature Activity.
      *
-     * @return BaseViewModel
+     * @return MvvmiModel
      */
     protected abstract fun setViewModel(): M
 

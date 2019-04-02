@@ -15,7 +15,7 @@ import io.reactivex.subjects.BehaviorSubject
  * @param V is our View interface
  * @param A sealed class that holds actions
  */
-abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : BaseMviAction<S>> :
+abstract class MvvmiModel<S : MvvmiViewState, V : MvvmiView<S, *>, A : MvvmiAction<S>> :
     ViewModel() {
 
     /**
@@ -138,7 +138,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
      * @param intent users interaction coming from the View
      * @return Observable that emits Actions
      */
-    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
+    protected abstract fun <I : MvvmiIntent> intentToAction(intent: I): Observable<A>
 
     /**
      * Adding custom subscriptions to our Disposable to be confident that customs are being cleared
@@ -158,7 +158,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
      *
      * @param intent users interaction coming from the View
      */
-    protected open fun <I : BaseMviIntent> intentWithoutAction(intent: I) {}
+    protected open fun <I : MvvmiIntent> intentWithoutAction(intent: I) {}
 
     /**
      * Pushing received states to the View, to perform UI action due to received intent and

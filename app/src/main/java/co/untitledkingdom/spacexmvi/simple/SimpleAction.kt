@@ -1,8 +1,8 @@
 package co.untitledkingdom.spacexmvi.simple
 
-import co.untitledkingdom.spacexmvi.base.BaseMviAction
+import co.untitledkingdom.spacexmvi.base.MvvmiAction
 
-sealed class SimpleAction : BaseMviAction<SimpleViewState> {
+sealed class SimpleAction : MvvmiAction<SimpleViewState> {
 
     object Nothing : SimpleAction() {
         override fun reduce(previousState: SimpleViewState): SimpleViewState {

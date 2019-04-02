@@ -1,9 +1,9 @@
 package co.untitledkingdom.spacexmvi.main
 
-import co.untitledkingdom.spacexmvi.base.BaseMviAction
+import co.untitledkingdom.spacexmvi.base.MvvmiAction
 import co.untitledkingdom.spacexmvi.models.Rocket
 
-sealed class MainAction : BaseMviAction<MainViewState> {
+sealed class MainAction : MvvmiAction<MainViewState> {
 
     object ShowProgress : MainAction() {
         override fun reduce(previousState: MainViewState) =

@@ -1,6 +1,6 @@
 package co.untitledkingdom.spacexmvi.base
 
-interface BaseMviAction<V : BaseMviViewState> {
+interface MvvmiAction<V : MvvmiViewState> {
 
     fun reduce(previousState: V): V
 }

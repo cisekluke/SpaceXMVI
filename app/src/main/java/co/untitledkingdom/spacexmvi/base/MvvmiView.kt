@@ -2,7 +2,7 @@ package co.untitledkingdom.spacexmvi.base
 
 import io.reactivex.Observable
 
-interface BaseMviView<in V : BaseMviViewState, I : BaseMviIntent> {
+interface MvvmiView<in V : MvvmiViewState, I : MvvmiIntent> {
 
     fun render(viewState: V)
 
