@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment
 abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : BaseMviPresenter<VS, V, *>> :
     Fragment() {
 
-    private lateinit var presenter: P
+    private lateinit var featurePresenter: P
     private val retainedTag = "FRAGMENT_HOLDER"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -21,16 +21,16 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
 
     override fun onStart() {
         super.onStart()
-        presenter.bind()
+        featurePresenter.bind()
     }
 
     override fun onStop() {
-        presenter.unbind()
+        featurePresenter.unbind()
         super.onStop()
     }
 
     override fun onDestroy() {
-        presenter.deinitialize()
+        featurePresenter.deinitialize()
         super.onDestroy()
     }
 
@@ -39,7 +39,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     abstract fun getPresenter(): P
 
     private fun initialize() {
-        presenter.attachView(view())
+        featurePresenter.attachView(view())
     }
 
     private fun attachPresenter() {
@@ -58,7 +58,7 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
         childFragmentManager.beginTransaction()
             .add(retainedFragment, retainedTag).commit()
 
-        presenter = getPresenter()
+        featurePresenter = getPresenter()
         setPresenterInstance(retainedFragment)
     }
 
@@ -66,15 +66,15 @@ abstract class BaseMviFragment<VS : BaseMviViewState, V : BaseMviView<VS>, P : B
     private fun getPresenterFromRetainedFragment() {
         val retainedFragment = findRetainedFragment()
 
-        presenter =
+        featurePresenter =
             (retainedFragment as BaseRetainedFragment<VS, P>).getPresenter() ?: getPresenter()
         setPresenterInstance(retainedFragment)
 
-        retainedFragment.getInfoFromBundle()?.let { presenter.initState(it) }
+        retainedFragment.getInfoFromBundle()?.let { featurePresenter.initState(it) }
     }
 
     private fun setPresenterInstance(retainedFragment: BaseRetainedFragment<VS, P>) {
-        retainedFragment.setPresenter(presenter)
+        retainedFragment.setPresenter(featurePresenter)
     }
 
     private fun findRetainedFragment() = childFragmentManager.findFragmentByTag(retainedTag)
