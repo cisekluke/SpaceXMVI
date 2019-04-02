@@ -4,11 +4,11 @@ Sample project on which we build and test different architecture approaches. Mos
 
 
 ## There are three different branches:
+ - mviPresenter renamed to mvi - standard MVI architecture with `Presenter`, not using `ViewModel`
+ - mviWithActions renamed to mvvmi - new approach(something like MVVMI), with `ViewModel` as presentation layer, including some new features for our architecture as for example `Action`, `Intent` 
+ 
+ **@Depreciated**
  - mviStandard - standard MVI architecture with `ViewModel` as presentation layer 
- - mviPresenter - standard MVI architecture with `Presenter`, not using `ViewModel`
- - mviWithActions - new approach(something like MVVMI), with `ViewModel` as presentation layer, including some new features for our architecture as for example `Action`, `Intent` 
-
-**NOTE:** branch "mviWithActions" is the most ahead and "master" is not being used
 
 **UPDATE 26.03:** 
 - mviPresenter - `Presenter` instance is being hold inside `retained fragment` which holds last `view state` in a bundle
