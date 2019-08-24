@@ -6,6 +6,7 @@ import android.support.annotation.MainThread
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 
 /**
  * Base class to implement for ViewModels to follow our MVVMI architecture approach. This one
@@ -81,7 +82,7 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
      */
     internal fun bind() {
         if (!subscribed) {
-            subscribeStates(mapIntents())
+            subscribeStates(Observable.merge(mapIntents(), actionWithoutIntent()))
             subscribeWithoutStates()
         }
 
@@ -133,12 +134,21 @@ abstract class BaseViewModel<S : BaseMviViewState, V : BaseMviView<S, *>, A : Ba
 
     /**
      * Override this method to assign which action should be perform due to incoming event.
-     * Here you should call Modelm Repository or any business layer object if needed.
+     * Here you should call Model, Repository or any business layer object if needed.
      *
      * @param intent users interaction coming from the View
      * @return Observable that emits Actions
      */
-    protected abstract fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A>
+    protected open fun <I : BaseMviIntent> intentToAction(intent: I): Observable<A> =
+        PublishSubject.create()
+
+    /**
+     * Override this method to transfer incoming actions from any business logic to the View
+     * when they not required any interaction(intent) from UI interface
+     */
+    protected open fun actionWithoutIntent() : Observable<A> {
+        return PublishSubject.create()
+    }
 
     /**
      * Adding custom subscriptions to our Disposable to be confident that customs are being cleared
